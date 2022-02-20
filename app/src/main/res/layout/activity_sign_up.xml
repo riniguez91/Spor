@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/register_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryDark"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".SignUp">
+
+    <ImageView
+        android:id="@+id/login_image"
+        android:layout_width="81dp"
+        android:layout_height="74dp"
+        android:contentDescription="@string/login_image_content_description_text"
+        android:transitionName="@string/transition_logo"
+        app:layout_constraintBottom_toTopOf="@+id/register_heading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.19"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/register_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:fontFamily="@font/nexa_bold"
+        android:text="@string/register_header_text"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:transitionName="@string/transition_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/register_subheading"
+        android:transitionName="@string/transition_subheading"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/nexa_light"
+        android:text="@string/register_subheading_text"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_heading" />
+
+    <EditText
+        android:id="@+id/register_fullname"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:autofillHints="@string/prompt_fullname"
+        android:fontFamily="@font/nexa_bold"
+        android:hint="@string/prompt_fullname"
+        android:inputType="textPersonName"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_subheading" />
+
+    <EditText
+        android:id="@+id/register_username"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="14dp"
+        android:autofillHints="@string/prompt_username"
+        android:hint="@string/prompt_username"
+        android:inputType="textNoSuggestions"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_fullname"
+        app:passwordToggleEnabled="true" />
+
+    <EditText
+        android:id="@+id/register_email"
+        android:transitionName="@string/transition_username"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="14dp"
+        android:autofillHints="@string/prompt_email"
+        android:hint="@string/prompt_email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.593"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_username"
+        app:passwordToggleEnabled="true" />
+
+    <EditText
+        android:id="@+id/register_phone_no"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="14dp"
+        android:autofillHints="@string/prompt_phone_no"
+        android:hint="@string/prompt_phone_no"
+        android:inputType="phone"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.593"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_email"
+        app:passwordToggleEnabled="true" />
+
+    <EditText
+        android:id="@+id/register_password"
+        android:transitionName="@string/transition_password"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="14dp"
+        android:autofillHints="@string/prompt_password"
+        android:hint="@string/prompt_password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.593"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_phone_no"
+        app:passwordToggleEnabled="true" />
+
+    <EditText
+        android:id="@+id/register_repeat_password"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="14dp"
+        android:autofillHints="@string/prompt_repeat_password"
+        android:hint="@string/prompt_repeat_password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_password"
+        app:passwordToggleEnabled="true" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="267dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_repeat_password">
+
+        <CheckBox
+            android:id="@+id/register_tcs_cb"
+            android:layout_width="33dp"
+            android:layout_height="48dp"
+            android:buttonTint="@color/white" />
+
+        <TextView
+            android:id="@+id/register_tcs_nolink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/nexa_light"
+            android:text="@string/register_tcs_nolink_text"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/register_tcs_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/nexa_light"
+            android:text="@string/register_tcs_link_text"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/register_signup_button"
+        android:layout_width="200dp"
+        android:layout_height="51dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/roundstyle"
+        android:enabled="true"
+        android:fontFamily="@font/nexa_bold"
+        android:text="@string/action_sign_up"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:transitionName="@string/transition_signin"
+        app:backgroundTint="@color/colorAccent"
+        app:cornerRadius="@dimen/fab_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:rippleColor="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/register_go_to_login"
+        android:layout_width="270dp"
+        android:layout_height="52dp"
+        android:background="#00FFFFFF"
+        android:text="@string/register_go_to_login_text"
+        android:textSize="11sp"
+        android:transitionName="@string/transition_signup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_signup_button" />
+
+    <ImageButton
+        android:id="@+id/register_back_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/register_heading"
+        app:layout_constraintEnd_toStartOf="@+id/login_image"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.13"
+        app:srcCompat="@drawable/ic_baseline_arrow_back_24"
+        app:tint="@color/white" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

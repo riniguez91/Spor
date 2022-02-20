@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">Spor_TFG</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Transition from splash to login animation strings -->
+    <string name="transition_logo">logo_image</string>
+    <string name="transition_text">logo_text</string>
+
+    <!-- Transition from login to signup screen -->
+    <string name="transition_subheading">logo_desc</string>
+    <string name="transition_username">logo_username</string>
+    <string name="transition_password">logo_password</string>
+    <string name="transition_signin">logo_signin</string>
+    <string name="transition_signup">logo_signup</string>
+
+    <!-- Splash screen strings -->
+    <string name="splash_header">Spor</string>
+    <string name="splash_slogan">Desgined for the players, by the players</string>
+    <string name="splash_image_content_description">Spor Logo</string>
+
+    <!-- Login strings -->
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="login_image_content_description">Image logo</string>
+    <string name="login_header_text">WELCOME BACK!</string>
+    <string name="login_subheading_text">Sign In to continue</string>
+    <string name="login_forgot_password_text">FORGOT PASSWORD?</string>
+    <string name="sign_in_with_google">Continue with Google</string>
+    <string name="login_signup_text">Don\'t have an account? Sign up</string>
+    <string name="login_image_content_description_text">Sport Logo</string>
+
+    <!-- Register strings -->
+    <string name="welcome">"Welcome !"</string>
+    <string name="register_header_text">"WELCOME!"</string>
+    <string name="register_subheading_text">Sign Up to start using our services!</string>
+    <string name="prompt_fullname">Full Name</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_phone_no">Phone No.</string>
+    <string name="prompt_repeat_password">Repeat Password</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="register_go_to_login_text">ALREADY HAVE AN ACCOUNT? LOGIN</string>
+
+    <!-- Phone verification strings -->
+    <string name="phone_subheading_text">Please enter the verification code you have received</string>
+    <string name="phone_heading_text">VERIFY PHONE NO</string>
+    <string name="phone_button_text">Send</string>
+    <string name="otp_input_text">Enter OTP Code</string>
+
+    <!-- Password reset strings -->
+    <string name="fpassword_subheading_text">Enter your e-mail address amd we\'ll send you an email to reset your password</string>
+    <string name="fpassword_heading_text">FORGOT PASSWORD?</string>
+    <string name="fpassword_button_text">Submit</string>
+    <string name="fpassword_input_text">Email</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="previous">Previous</string>
+
+    <!-- Main view strings -->
+    <string name="hello_first_fragment">0</string>
+    <string name="random_heading">Here is a random number between 0 and %d.</string>
+    <string name="toast_button_text">Toast</string>
+    <string name="random_button_text">Random</string>
+    <string name="count_button_text">Count</string>
+    <string name="toast_text">Hello Toast!</string>
+    <string name="textview_random_text">R</string>
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="register_tcs_nolink_text">I agree to the</string>
+    <string name="register_tcs_link_text"><u>Terms &amp; Conditions</u></string>
+
+
+</resources>

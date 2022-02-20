@@ -1,0 +1,8 @@
+<resources>
+
+    <style name="Widget.Theme.Spor_TFG.ButtonBar.Fullscreen" parent="">
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+</resources>
