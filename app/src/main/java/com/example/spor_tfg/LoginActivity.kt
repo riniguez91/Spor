@@ -99,15 +99,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // CHECK THIS DOESN'T WORK PROPERLY
-    /*public override fun onStart() {
+    public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if(currentUser != null){
-            // Do we need to pass user here using intent.putExtra()?
             goToMainPage();
         }
-    }*/
+    }
 
     fun loginUser() {
         if (validateUsername() and validatePassword()) {
@@ -135,7 +134,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainPage() {
-        val intent: Intent = Intent(this, MainActivity::class.java)
+        val intent: Intent = Intent(this, PaintActivity::class.java)
         startActivity(intent)
         finish()
     }

@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Spor_TFG">
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
@@ -21,6 +24,7 @@
             android:theme="@style/Theme.Spor_TFG.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,14 +32,20 @@
             android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
+            android:theme="@style/Theme.Spor_TFG.NoActionBar" />
         <activity
             android:name=".SignUp"
             android:exported="false"
-            android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
+            android:theme="@style/Theme.Spor_TFG.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
+        <activity
+            android:name=".PaintActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Spor_TFG.NoActionBar">
+        </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="player1"/>
+    <item type="id" name="player2"/>
+    <item type="id" name="player3"/>
+    <item type="id" name="player4"/>
+    <item type="id" name="player5"/>
+    <item type="id" name="player6"/>
+    <item type="id" name="player7"/>
+    <item type="id" name="player8"/>
+    <item type="id" name="player9"/>
+    <item type="id" name="player10"/>
+    <item type="id" name="player11"/>
+    <item type="id" name="player12"/>
+    <item type="id" name="player13"/>
+    <item type="id" name="player14"/>
+    <item type="id" name="player15"/>
+    <item type="id" name="player16"/>
+    <item type="id" name="player17"/>
+    <item type="id" name="player18"/>
+    <item type="id" name="player19"/>
+    <item type="id" name="player20"/>
+    <item type="id" name="player21"/>
+    <item type="id" name="player22"/>
+    <item type="id" name="player23"/>
+    <item type="id" name="player24"/>
+    <item type="id" name="player25"/>
+    <item type="id" name="player26"/>
+    <item type="id" name="player27"/>
+    <item type="id" name="player28"/>
+    <item type="id" name="player29"/>
+    <item type="id" name="player30"/>
+</resources>

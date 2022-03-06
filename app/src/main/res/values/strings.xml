@@ -76,6 +76,11 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="register_tcs_nolink_text">I agree to the</string>
     <string name="register_tcs_link_text"><u>Terms &amp; Conditions</u></string>
+    <string name="todo">TODO</string>
+    <string name="color">Color</string>
+    <string name="bin">Bin</string>
+    <string name="undo">Undo</string>
+    <string name="save">Save</string>
 
 
 </resources>
