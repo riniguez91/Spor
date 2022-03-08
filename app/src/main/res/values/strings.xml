@@ -82,5 +82,11 @@
     <string name="undo">Undo</string>
     <string name="save">Save</string>
 
+    <!-- Toolbar strings -->
+    <string name="navigation_drawer_open">Navigation drawer open</string>
+    <string name="navigation_drawer_close">Navigation drawer close</string>
+    <string name="menu_whiteboard">Whiteboard</string>
+    <string name="menu_profile">Profile</string>
+
 
 </resources>

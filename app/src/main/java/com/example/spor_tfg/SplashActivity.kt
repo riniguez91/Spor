@@ -50,6 +50,7 @@ class SplashActivity : AppCompatActivity() {
 
             val options: ActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this, *pairs)
             startActivity(intent, options.toBundle())
+            finish()
         }, splashTimeOut)
     }
 }

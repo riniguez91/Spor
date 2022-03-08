@@ -1,10 +1,10 @@
 package com.example.spor_tfg
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipDescription
 import android.content.ContentValues
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -13,17 +13,26 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.*
+import android.view.DragEvent
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.widget.*
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.spor_tfg.databinding.ActivityPaintBinding
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,20 +41,22 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import com.kyleduo.blurpopupwindow.library.BlurPopupWindow
 import petrov.kristiyan.colorpicker.ColorPicker
 import petrov.kristiyan.colorpicker.ColorPicker.OnFastChooseColorListener
 import java.io.OutputStream
 
 
-class PaintActivity : AppCompatActivity() {
+
+class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityPaintBinding
     private var auth: FirebaseAuth = Firebase.auth
     private var storage: FirebaseStorage = Firebase.storage
-    private var storageRef: StorageReference = Firebase.storage.reference
+
     // in order to get the reference of the View
     lateinit var paint: DrawView
+    lateinit var drawerLayout: DrawerLayout
+    lateinit var navigationView: NavigationView
 
     // creating objects of type button
     lateinit var save: ImageButton
@@ -67,12 +78,20 @@ class PaintActivity : AppCompatActivity() {
 
         // getting the reference of the views from their ids
         paint = findViewById(R.id.draw_view)
-        paint.background = ContextCompat.getDrawable(this@PaintActivity, R.drawable.soccer_field_drawn_on_green_chalkboard)
+        paint.background = ContextCompat.getDrawable(this@PaintActivity, R.drawable.football_field_horizontal)
         undo = findViewById<View>(R.id.btn_undo) as ImageButton
         save = findViewById<View>(R.id.btn_save) as ImageButton
         color = findViewById<View>(R.id.btn_color) as ImageButton
         bin = findViewById<View>(R.id.btn_bin) as ImageButton
         playersLinearLayout = findViewById(R.id.players_ll)
+        navigationView = findViewById(R.id.navigation_view)
+
+        // Integrate toolbar menu functionality
+        initToolbar()
+        navigationView.setNavigationItemSelectedListener(this@PaintActivity)
+
+        // Preselect home element
+        preselectToolbar()
 
         // Load player image buttons array to insert into the view
         loadPlayers()
@@ -161,6 +180,29 @@ class PaintActivity : AppCompatActivity() {
         allowDragIntoCanvas()
     }
 
+    private fun initToolbar() {
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar.title = "Spor"
+        toolbar.title
+        setSupportActionBar(findViewById<View>(R.id.toolbar) as Toolbar)
+
+        drawerLayout = findViewById<View>(R.id.drawer_layout) as DrawerLayout
+        val toggle: ActionBarDrawerToggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout as DrawerLayout?,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        (drawerLayout as DrawerLayout?)?.addDrawerListener(toggle)
+        toggle.syncState()
+    }
+
+    private fun preselectToolbar() {
+        val menuItem: MenuItem = navigationView.menu.getItem(0)
+        menuItem.isChecked = true
+    }
+
     @RequiresApi(Build.VERSION_CODES.N)
     private fun loadPlayers() {
         val playersRef = db.collection("user").document(auth.uid.toString())
@@ -206,17 +248,6 @@ class PaintActivity : AppCompatActivity() {
             val imageButton = ImageButton(this@PaintActivity)
             imageButton.id = index
 
-            /*val layoutParams: LinearLayout.LayoutParams =
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            val vto = playersLinearLayout.viewTreeObserver
-            vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    playersLinearLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    val width = paint.measuredWidth
-                    val height = paint.measuredHeight
-
-                }
-            })*/
             // Setting image bitmaps
             val imageBitmap: Bitmap = Bitmap.createScaledBitmap(bmp, 150, 150, false)
             val popUpImageBitmap: Bitmap = Bitmap.createScaledBitmap(bmp, 500, 500, false)
@@ -340,16 +371,27 @@ class PaintActivity : AppCompatActivity() {
                     // Gets the item containing the dragged data.
                     val item: ClipData.Item = e.clipData.getItemAt(0)
                     // We make sure it anchors to the center of the image and not the top-left corner as the default implementation
-                    image.x = e.x - (image.width / 2)
-                    image.y = e.y - (image.height / 2)
+
+                    if (image.parent == paint) {
+                        // Check flag for animation here
+                        Log.i("test","si es parent")
+                    }
 
                     // Container of the draggable image
-                    if (image.parent != null) {
-                        (image.parent as ViewGroup).removeView(image)
-                    }
+                    (image.parent as ViewGroup).removeView(image)
 
                     // Paint canvas
                     paint.addView(image)
+                    image.animate()
+                        .x(e.x)
+                        .y(e.y)
+                        .setDuration(700)
+                        .start()
+                    image.x = e.x - (image.width / 2)
+                    image.y = e.y - (image.height / 2)
+
+
+
 
                     true
                 }
@@ -367,6 +409,20 @@ class PaintActivity : AppCompatActivity() {
                     false
                 }
             }
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.nav_whiteboard -> {
+                true
+            }
+            R.id.nav_profile -> {
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> true
         }
     }
 }

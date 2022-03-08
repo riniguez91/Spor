@@ -15,6 +15,12 @@
 
     </style>
 
+    <style name="Theme.Spor_TFG.CustomToolbar">
+        <item name="android:fontFamily">@font/nexa_bold</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
     <style name="Theme.Spor_TFG.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

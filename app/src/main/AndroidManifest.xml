@@ -11,7 +11,8 @@
         android:theme="@style/Theme.Spor_TFG">
         <activity
             android:name=".ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
@@ -24,7 +25,6 @@
             android:theme="@style/Theme.Spor_TFG.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -43,7 +43,9 @@
         <activity
             android:name=".PaintActivity"
             android:exported="true"
-            android:theme="@style/Theme.Spor_TFG.NoActionBar">
+            android:theme="@style/Theme.Spor_TFG.NoActionBar"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden">
         </activity>
 
         <meta-data
