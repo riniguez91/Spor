@@ -30,45 +30,115 @@
 
         <LinearLayout
             android:id="@+id/linearLayout3"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/layout_bg"
             android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/dv_linear_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageButton
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/btn_undo"
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/ic_undo"
                 android:text="@string/undo" />
 
-            <ImageButton
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/btn_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/save"
                 android:text="@string/save" />
 
-            <ImageButton
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/btn_color"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/color_picker"
                 android:text="@string/color" />
 
-            <ImageButton
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/btn_bin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="70dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/bin_256"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_single_anim"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/single_animation"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/vertical_line"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/vertical_line"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_multi_anim"
+                android:layout_width="41dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/multi_animation"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_multi_anim_done"
+                android:layout_width="41dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/done"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/vertical_line_2"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/vertical_line"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_play_anim"
+                android:layout_width="41dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/play"
+                android:layout_marginEnd="15dp"
                 android:text="@string/bin" />
         </LinearLayout>
 

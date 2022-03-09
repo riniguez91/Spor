@@ -1,5 +1,7 @@
 package com.example.spor_tfg
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipDescription
@@ -8,6 +10,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Path
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -18,17 +21,14 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.view.GravityCompat
+import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.spor_tfg.databinding.ActivityPaintBinding
 import com.google.android.material.imageview.ShapeableImageView
@@ -39,12 +39,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import petrov.kristiyan.colorpicker.ColorPicker
 import petrov.kristiyan.colorpicker.ColorPicker.OnFastChooseColorListener
 import java.io.OutputStream
-
+import kotlin.math.abs
 
 
 class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -59,12 +58,24 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     lateinit var navigationView: NavigationView
 
     // creating objects of type button
-    lateinit var save: ImageButton
-    lateinit var color: ImageButton
-    lateinit var undo: ImageButton
-    lateinit var bin: ImageButton
+    lateinit var save: ShapeableImageView
+    lateinit var color: ShapeableImageView
+    lateinit var undo: ShapeableImageView
+    lateinit var bin: ShapeableImageView
+    lateinit var singleAnim: ShapeableImageView
+    lateinit var multiAnim: ShapeableImageView
+    lateinit var done: ShapeableImageView
+    lateinit var playAnim: ShapeableImageView
+
     lateinit var playersLinearLayout: LinearLayout
     private val db: FirebaseFirestore = Firebase.firestore
+
+    private var singleAnimFlag: Boolean = false
+    private var multiAnimFlag: Boolean = false
+    private lateinit var animPath: Path
+    private var animationPaths: HashMap<Int, HashMap<Int, Path>> = HashMap<Int, HashMap<Int, Path>>()
+    private var framePaths: HashMap<Int, Path> = HashMap()
+    private var frameNo: Int = 1
 
     private lateinit var teamsAL: ArrayList<Any>
 
@@ -79,10 +90,15 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // getting the reference of the views from their ids
         paint = findViewById(R.id.draw_view)
         paint.background = ContextCompat.getDrawable(this@PaintActivity, R.drawable.football_field_horizontal)
-        undo = findViewById<View>(R.id.btn_undo) as ImageButton
-        save = findViewById<View>(R.id.btn_save) as ImageButton
-        color = findViewById<View>(R.id.btn_color) as ImageButton
-        bin = findViewById<View>(R.id.btn_bin) as ImageButton
+        undo = findViewById<View>(R.id.btn_undo) as ShapeableImageView
+        save = findViewById<View>(R.id.btn_save) as ShapeableImageView
+        color = findViewById<View>(R.id.btn_color) as ShapeableImageView
+        bin = findViewById<View>(R.id.btn_bin) as ShapeableImageView
+        singleAnim = findViewById<View>(R.id.btn_single_anim) as ShapeableImageView
+        multiAnim = findViewById<View>(R.id.btn_multi_anim) as ShapeableImageView
+        done = findViewById<View>(R.id.btn_multi_anim_done) as ShapeableImageView
+        playAnim = findViewById<View>(R.id.btn_play_anim) as ShapeableImageView
+
         playersLinearLayout = findViewById(R.id.players_ll)
         navigationView = findViewById(R.id.navigation_view)
 
@@ -160,6 +176,87 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 // in the dialog
                 .setDefaultColorButton(Color.parseColor("#000000"))
                 .show()
+        }
+
+        bin.setOnClickListener {
+            paint.clearBoard()
+        }
+
+        singleAnim.setOnClickListener {
+            when {
+                // We make sure only one flag is active at a time
+                multiAnimFlag -> {
+                    multiAnimFlag = false
+                    multiAnim.setBackgroundColor(Color.TRANSPARENT)
+                    framePaths = HashMap()
+                }
+                // Unselect single animation mode
+                singleAnimFlag -> {
+                    singleAnimFlag = false
+                    singleAnim.setBackgroundColor(Color.TRANSPARENT)
+                }
+                // Select single animation mode
+                else -> {
+                    singleAnimFlag = true
+                    singleAnim.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                }
+            }
+        }
+
+        multiAnim.setOnClickListener {
+            when {
+                // We make sure only one flag is active at a time
+                singleAnimFlag -> {
+                    singleAnimFlag = false
+                    singleAnim.setBackgroundColor(Color.TRANSPARENT)
+                }
+                // Unselect multi animation mode
+                multiAnimFlag -> {
+                    multiAnimFlag = false
+                    multiAnim.setBackgroundColor(Color.TRANSPARENT)
+                }
+                // Select multi animation mode
+                else -> {
+                    multiAnimFlag = true
+                    multiAnim.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                }
+            }
+        }
+
+        done.setOnClickListener {
+            frameNo++
+            framePaths = HashMap()
+            multiAnimFlag = false
+            multiAnim.setBackgroundColor(Color.TRANSPARENT)
+            // TODO("Check there is at least an animation corresponding to the frameNo")
+        }
+
+        playAnim.setOnClickListener {
+            // {frame: {list_of_paths}, frame2: {list_of_paths}}
+            // {1: {path0, path1 ...}, 2: {path0, path1}
+            // {1: {{image_button1_id: path}, {image_button2_id: path}, ...}, ...}
+            // animationPaths: HashMap<Int, HashMap<Int, Path>>
+
+            println("\nWhole hashmap $animationPaths\n")
+
+            for ((frame, paths) in animationPaths) {
+                // Do something with frame (such as paint it in each animation path)
+                for ((id, path) in paths) {
+                    // val id: Int = anim
+                    // val path: Path? = animationPaths[frame]?.get(id)
+                    val image: View = paint.findViewById(id)
+                    val dst: Path = Path()
+
+                    // Offset the path such that the image seems to follow the animation from the middle
+                    // Since it is actually following another path that allows for this
+                    path.offset(image.width / 2.toFloat()*-1, image.height / 2.toFloat()*-1, dst)
+                    val pathAnimator: ValueAnimator = ObjectAnimator.ofFloat(image, "x", "y", dst)
+                    pathAnimator
+                        .setDuration(5000)
+                        .startDelay = ((frame-1) * 5000).toLong()
+                    pathAnimator.start()
+                }
+            }
         }
 
         // pass the height and width of the custom view
@@ -349,6 +446,13 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 DragEvent.ACTION_DRAG_STARTED -> {
                     // Determines if this View can accept the dragged data.
                     e.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
+
+                    // Get starting coordinates for the animation path
+                    if ((singleAnimFlag || multiAnimFlag) && image.parent == paint) {
+                        animPath = Path()
+                        animPath.moveTo(e.x, e.y)
+                        v.invalidate()
+                    }
                     true
                 }
                 DragEvent.ACTION_DRAG_ENTERED -> {
@@ -356,9 +460,12 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     v.invalidate()
                     true
                 }
-
                 DragEvent.ACTION_DRAG_LOCATION -> {
-                    // Unused method
+                    if (singleAnimFlag || multiAnimFlag) {
+                        animPath.lineTo(e.x, e.y)
+                        v.invalidate()
+                    }
+                    // animPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2)
                     true
                 }
                 DragEvent.ACTION_DRAG_EXITED -> {
@@ -368,30 +475,39 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     true
                 }
                 DragEvent.ACTION_DROP -> {
-                    // Gets the item containing the dragged data.
-                    val item: ClipData.Item = e.clipData.getItemAt(0)
                     // We make sure it anchors to the center of the image and not the top-left corner as the default implementation
+                    val x = e.x - (image.width / 2)
+                    val y = e.y - (image.height / 2)
 
                     if (image.parent == paint) {
-                        // Check flag for animation here
-                        Log.i("test","si es parent")
+                        // Check if its a simple drag & drop
+                        if (!singleAnimFlag && !multiAnimFlag) {
+                            image.animate()
+                                .x(x)
+                                .y(y)
+                                .setDuration(700)
+                                .start()
+                        }
+                        // Else we know its an animation drawing
+                        else {
+                            // animPath.lineTo(x, y)
+                            val fp = Stroke(Color.BLACK, 5, animPath)
+                            paint.paths.add(fp)
+                            insertAnimations(frameNo, image)
+                            if (singleAnimFlag) {
+                                frameNo++
+                                framePaths = HashMap()
+                            }
+                        }
                     }
 
                     // Container of the draggable image
                     (image.parent as ViewGroup).removeView(image)
 
                     // Paint canvas
+                    image.x = x
+                    image.y = y
                     paint.addView(image)
-                    image.animate()
-                        .x(e.x)
-                        .y(e.y)
-                        .setDuration(700)
-                        .start()
-                    image.x = e.x - (image.width / 2)
-                    image.y = e.y - (image.height / 2)
-
-
-
 
                     true
                 }
@@ -410,6 +526,17 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 }
             }
         }
+    }
+
+    private fun insertAnimations(frame: Int, image: View) {
+        // {frame: {list_of_paths}, frame2: {list_of_paths}}
+        // {1: {path0, path1 ...}, 2: {path0, path1}
+        // {1: {{image_button1_id, path}, {image_button2_id, path}, ...}, ...}
+        framePaths[image.id] = animPath
+        animationPaths[frame] = framePaths
+        Toast.makeText(this, "Added frame on frame number: $frameNo", Toast.LENGTH_SHORT).show()
+        animPath = Path()
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

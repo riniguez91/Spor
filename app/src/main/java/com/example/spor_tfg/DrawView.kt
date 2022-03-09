@@ -75,6 +75,13 @@ class DrawView: RelativeLayout {
         }
     }
 
+    fun clearBoard() {
+        if (paths.size != 0) {
+            paths.removeAll(paths)
+            invalidate()
+        }
+    }
+
     // this methods returns the current bitmap
     fun save(): Bitmap? {
         return mBitmap
