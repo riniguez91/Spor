@@ -28,6 +28,8 @@ class DrawView: RelativeLayout {
     // ArrayList to store all the strokes
     // drawn by the user on the Canvas
     val paths: ArrayList<Stroke> = ArrayList<Stroke>()
+    val animPaths: ArrayList<Stroke> = ArrayList<Stroke>()
+    val dashEffect = DashPathEffect(floatArrayOf(10f,20f), 0f)
     var currentColor = 0
     private var strokeWidth = 0
     var mBitmap: Bitmap? = null
@@ -95,6 +97,14 @@ class DrawView: RelativeLayout {
             mPaint.strokeWidth = stroke.strokeWidth.toFloat()
             canvas.drawPath(stroke.path, mPaint)
         }
+        for (stroke in animPaths) {
+            mPaint.color = stroke.color
+            mPaint.strokeWidth = stroke.strokeWidth.toFloat()
+            mPaint.pathEffect = dashEffect
+            canvas.drawPath(stroke.path, mPaint)
+        }
+        mPaint.pathEffect = null
+
     }
 
     // the below methods manages the touch

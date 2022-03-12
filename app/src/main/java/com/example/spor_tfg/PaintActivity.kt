@@ -7,10 +7,7 @@ import android.content.ClipData
 import android.content.ClipDescription
 import android.content.ContentValues
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Path
+import android.graphics.*
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -62,20 +59,33 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     lateinit var color: ShapeableImageView
     lateinit var undo: ShapeableImageView
     lateinit var bin: ShapeableImageView
+
     lateinit var singleAnim: ShapeableImageView
     lateinit var multiAnim: ShapeableImageView
     lateinit var done: ShapeableImageView
+    lateinit var animationColorButton: ShapeableImageView
     lateinit var playAnim: ShapeableImageView
+
+    private var trainingEquipmentFlag: Boolean = false
+    lateinit var cone: ShapeableImageView
+    lateinit var football: ShapeableImageView
+    lateinit var dummy: ShapeableImageView
+    lateinit var goalie: ShapeableImageView
 
     lateinit var playersLinearLayout: LinearLayout
     private val db: FirebaseFirestore = Firebase.firestore
 
+    // Animation variables
     private var singleAnimFlag: Boolean = false
     private var multiAnimFlag: Boolean = false
     private lateinit var animPath: Path
     private var animationPaths: HashMap<Int, HashMap<Int, Path>> = HashMap<Int, HashMap<Int, Path>>()
     private var framePaths: HashMap<Int, Path> = HashMap()
     private var frameNo: Int = 1
+    private var animationColor: Int = Color.WHITE
+
+    // Color array
+    val colors: ArrayList<String> = ArrayList()
 
     private lateinit var teamsAL: ArrayList<Any>
 
@@ -94,10 +104,17 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         save = findViewById<View>(R.id.btn_save) as ShapeableImageView
         color = findViewById<View>(R.id.btn_color) as ShapeableImageView
         bin = findViewById<View>(R.id.btn_bin) as ShapeableImageView
+
         singleAnim = findViewById<View>(R.id.btn_single_anim) as ShapeableImageView
         multiAnim = findViewById<View>(R.id.btn_multi_anim) as ShapeableImageView
         done = findViewById<View>(R.id.btn_multi_anim_done) as ShapeableImageView
+        animationColorButton = findViewById<View>(R.id.btn_animation_color) as ShapeableImageView
         playAnim = findViewById<View>(R.id.btn_play_anim) as ShapeableImageView
+
+        cone = findViewById<View>(R.id.btn_training_cone) as ShapeableImageView
+        football = findViewById<View>(R.id.btn_football) as ShapeableImageView
+        dummy = findViewById<View>(R.id.btn_dummy) as ShapeableImageView
+        goalie = findViewById<View>(R.id.btn_goal_net) as ShapeableImageView
 
         playersLinearLayout = findViewById(R.id.players_ll)
         navigationView = findViewById(R.id.navigation_view)
@@ -111,6 +128,9 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         // Load player image buttons array to insert into the view
         loadPlayers()
+
+        // Set color array for colorpicker
+        setColorPickerColors()
 
         // Add undo image button functionality
         // Removes last stroke from the canvas
@@ -165,6 +185,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     // selected from the dialog box and
                     // set it as the stroke color
                     paint.setColor(color)
+                    colorPicker.setDefaultColorButton(color)
                 }
 
                 override fun onCancel() {
@@ -174,12 +195,16 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 // you want to show in dialog.
                 .setColumns(5) // set a default color selected
                 // in the dialog
-                .setDefaultColorButton(Color.parseColor("#000000"))
+                .setColors(colors)
+                .setRoundColorButton(true)
+                // .setDefaultColorButton(Color.parseColor("#000000"))
                 .show()
         }
 
         bin.setOnClickListener {
             paint.clearBoard()
+            animationPaths.clear()
+            frameNo = 1
         }
 
         singleAnim.setOnClickListener {
@@ -189,6 +214,11 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     multiAnimFlag = false
                     multiAnim.setBackgroundColor(Color.TRANSPARENT)
                     framePaths = HashMap()
+                    if (animationPaths.isNotEmpty()) {
+                        frameNo++
+                    }
+                    singleAnimFlag = true
+                    singleAnim.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
                 }
                 // Unselect single animation mode
                 singleAnimFlag -> {
@@ -209,6 +239,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 singleAnimFlag -> {
                     singleAnimFlag = false
                     singleAnim.setBackgroundColor(Color.TRANSPARENT)
+                    multiAnimFlag = true
+                    multiAnim.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
                 }
                 // Unselect multi animation mode
                 multiAnimFlag -> {
@@ -226,9 +258,38 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         done.setOnClickListener {
             frameNo++
             framePaths = HashMap()
+
+            // Unselect animation flags since we are playing the animations
+            singleAnimFlag = false
+            singleAnim.setBackgroundColor(Color.TRANSPARENT)
             multiAnimFlag = false
             multiAnim.setBackgroundColor(Color.TRANSPARENT)
             // TODO("Check there is at least an animation corresponding to the frameNo")
+        }
+
+        animationColorButton.setOnClickListener {
+            val aColorPicker = ColorPicker(this@PaintActivity)
+
+            aColorPicker
+                .setColumns(5) // set a default color selected
+                // in the dialog
+                .setColors(colors)
+                // .setDefaultColorButton(Color.WHITE)
+                .setRoundColorButton(true)
+                // .setColorButtonTickColor(Color.BLACK)
+                .setOnFastChooseColorListener(object : OnFastChooseColorListener {
+                override fun setOnFastChooseColorListener(position: Int, color: Int) {
+                    // get the integer value of color
+                    // selected from the dialog box and
+                    // set it as the stroke color
+                    animationColor = color
+                    aColorPicker.setDefaultColorButton(color)
+                }
+
+                override fun onCancel() {
+                    aColorPicker.dismissDialog()
+                }
+            }).show()
         }
 
         playAnim.setOnClickListener {
@@ -275,6 +336,24 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         // Allow drag into the canvas
         allowDragIntoCanvas()
+    }
+
+    private fun setColorPickerColors() {
+        colors.add("#FFFFFF") // White
+        colors.add("#00171f") // Rich Black
+        colors.add("#003459") // Prussian Blue
+        colors.add("#007ea7") // Celadon Blue
+        colors.add("#00a8e8") // Carolina Blue
+        colors.add("#61210f") // Liver Organ
+        colors.add("#EA2B1F") // Red Pigment
+        colors.add("#edae49") // Sunray
+        colors.add("#F9DF74") // Jasmine
+        colors.add("#f9edcc") // Cornsilk
+        colors.add("#79B791") // Dark Sea Green
+        colors.add("#D45113") // Burnt Orange
+        colors.add("#f9a03f") // Deep Saffron
+        colors.add("#F8DDA4") // Peach
+        colors.add("#B0FF92") // Mint green
     }
 
     private fun initToolbar() {
@@ -402,17 +481,10 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val tag: String = "player icon"
         imageButton.tag = tag
 
+        // Player image drag
         imageButton.setOnLongClickListener {
-            // Create a new ClipData.
-            // This is done in two steps to provide clarity. The convenience method
-            // ClipData.newPlainText() can create a plain text ClipData in one step.
-
-            // Create a new ClipData.Item from the ImageView object's tag.
             val item = ClipData.Item(it.tag as? CharSequence)
 
-            // Create a new ClipData using the tag as a label, the plain text MIME type, and
-            // the already-created item. This creates a new ClipDescription object within the
-            // ClipData and sets its MIME type to "text/plain".
             val dragData = ClipData(
                 it.tag as? CharSequence,
                 arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
@@ -431,6 +503,138 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             imageButton.visibility = View.INVISIBLE
             true
         }
+
+        // Cone drag
+        coneDrag()
+
+        // Football drag
+        footballDrag()
+
+        // Dummy drag
+        dummyDrag()
+
+        // Goalie drag()
+        goalieDrag()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun coneDrag() {
+        val tag: String = "cone"
+        cone.tag = tag
+
+        cone.setOnLongClickListener {
+            trainingEquipmentFlag = true
+            singleAnimFlag = false
+            multiAnimFlag = false
+            val item = ClipData.Item(it.tag as? CharSequence)
+
+            val dragData = ClipData(
+                it.tag as? CharSequence,
+                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+                item)
+
+            // Instantiate the drag shadow builder.
+            val myShadow = View.DragShadowBuilder(cone)
+
+            // Start the drag.
+            it.startDragAndDrop(dragData,  // The data to be dragged
+                myShadow,  // The drag shadow builder
+                cone,      // No need to use local data
+                0          // Flags (not currently used, set to 0)
+            )
+
+            true
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun footballDrag() {
+        val tag: String = "football"
+        football.tag = tag
+
+        football.setOnLongClickListener {
+            trainingEquipmentFlag = true
+            singleAnimFlag = false
+            multiAnimFlag = false
+            val item = ClipData.Item(it.tag as? CharSequence)
+
+            val dragData = ClipData(
+                it.tag as? CharSequence,
+                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+                item)
+
+            // Instantiate the drag shadow builder.
+            val myShadow = View.DragShadowBuilder(football)
+
+            // Start the drag.
+            it.startDragAndDrop(dragData,  // The data to be dragged
+                myShadow,  // The drag shadow builder
+                football,      // No need to use local data
+                0          // Flags (not currently used, set to 0)
+            )
+
+            true
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun dummyDrag() {
+        val tag: String = "dummy"
+        dummy.tag = tag
+
+        dummy.setOnLongClickListener {
+            trainingEquipmentFlag = true
+            singleAnimFlag = false
+            multiAnimFlag = false
+            val item = ClipData.Item(it.tag as? CharSequence)
+
+            val dragData = ClipData(
+                it.tag as? CharSequence,
+                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+                item)
+
+            // Instantiate the drag shadow builder.
+            val myShadow = View.DragShadowBuilder(dummy)
+
+            // Start the drag.
+            it.startDragAndDrop(dragData,  // The data to be dragged
+                myShadow,  // The drag shadow builder
+                dummy,      // No need to use local data
+                0          // Flags (not currently used, set to 0)
+            )
+
+            true
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun goalieDrag() {
+        val tag: String = "goalie"
+        goalie.tag = tag
+
+        goalie.setOnLongClickListener {
+            trainingEquipmentFlag = true
+            singleAnimFlag = false
+            multiAnimFlag = false
+            val item = ClipData.Item(it.tag as? CharSequence)
+
+            val dragData = ClipData(
+                it.tag as? CharSequence,
+                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+                item)
+
+            // Instantiate the drag shadow builder.
+            val myShadow = View.DragShadowBuilder(goalie)
+
+            // Start the drag.
+            it.startDragAndDrop(dragData,  // The data to be dragged
+                myShadow,  // The drag shadow builder
+                goalie,      // No need to use local data
+                0          // Flags (not currently used, set to 0)
+            )
+
+            true
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -438,7 +642,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Set the drag event listener for the View.
         paint.setOnDragListener { v, e ->
 
-            // Player image
+            // Image being dragged
             val image = e.localState as View
 
             // Handles each of the expected events.
@@ -465,7 +669,6 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                         animPath.lineTo(e.x, e.y)
                         v.invalidate()
                     }
-                    // animPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2)
                     true
                 }
                 DragEvent.ACTION_DRAG_EXITED -> {
@@ -481,7 +684,18 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
                     if (image.parent == paint) {
                         // Check if its a simple drag & drop
-                        if (!singleAnimFlag && !multiAnimFlag) {
+                        if (singleAnimFlag || multiAnimFlag) {
+                            // TODO("Create animPathClone by value since it is by reference right now")
+                            val animPathClone: Path = animPath
+                            animPathClone.addCircle(e.x, e.y, 8f, Path.Direction.CW)
+                            val fp = Stroke(animationColor, 3, animPathClone)
+                            paint.animPaths.add(fp)
+                            insertAnimations(frameNo, image)
+                            if (singleAnimFlag) {
+                                frameNo++
+                                framePaths = HashMap()
+                            }
+                        }
                             image.animate()
                                 .x(x)
                                 .y(y)
@@ -489,25 +703,31 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                                 .start()
                         }
                         // Else we know its an animation drawing
-                        else {
-                            // animPath.lineTo(x, y)
-                            val fp = Stroke(Color.BLACK, 5, animPath)
-                            paint.paths.add(fp)
-                            insertAnimations(frameNo, image)
-                            if (singleAnimFlag) {
-                                frameNo++
-                                framePaths = HashMap()
+                        // else {
+                    // }
+                    else {
+                        // Create a copy of the image and add it to the view (we can have multiple training equipment images of the same type)
+                        if (image.tag == "cone" || image.tag == "football" || image.tag == "dummy" || image.tag == "goalie") {
+                            val trainingEquipImg: ShapeableImageView = ShapeableImageView(this@PaintActivity)
+                            image as ShapeableImageView
+                            trainingEquipImg.setImageDrawable(image.drawable)
+                            trainingEquipImg.x = x
+                            trainingEquipImg.y = y
+                            trainingEquipImg.setOnClickListener {
+                                // TODO("Maybe show dialog to confirm user really wants to remove image view")
+                                (trainingEquipImg.parent as ViewGroup).removeView(trainingEquipImg)
                             }
+                            paint.addView(trainingEquipImg)
+                        }
+                        else {
+                            // Container of the draggable image
+                            (image.parent as ViewGroup).removeView(image)
+                            // Paint canvas
+                            image.x = x
+                            image.y = y
+                            paint.addView(image)
                         }
                     }
-
-                    // Container of the draggable image
-                    (image.parent as ViewGroup).removeView(image)
-
-                    // Paint canvas
-                    image.x = x
-                    image.y = y
-                    paint.addView(image)
 
                     true
                 }

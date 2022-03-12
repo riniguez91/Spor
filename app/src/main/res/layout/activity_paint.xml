@@ -72,7 +72,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
-                android:src="@drawable/color_picker"
+                android:src="@drawable/paint_brush"
                 android:text="@string/color" />
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -132,12 +132,62 @@
                 android:text="@string/bin" />
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_animation_color"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/color_picker"
+                android:text="@string/color" />
+
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/btn_play_anim"
                 android:layout_width="41dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/play"
+                android:layout_marginEnd="70dp"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_training_cone"
+                android:layout_width="41dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/training_cone"
+                android:layout_marginEnd="15dp"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_football"
+                android:layout_width="41dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/football"
+                android:layout_marginEnd="15dp"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_dummy"
+                android:layout_width="41dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/dummy"
+                android:layout_marginEnd="15dp"
+                android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_goal_net"
+                android:layout_width="41dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/soccer_goal_net"
                 android:layout_marginEnd="15dp"
                 android:text="@string/bin" />
         </LinearLayout>
