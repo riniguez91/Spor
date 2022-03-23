@@ -87,6 +87,9 @@
     <string name="navigation_drawer_close">Navigation drawer close</string>
     <string name="menu_whiteboard">Whiteboard</string>
     <string name="menu_profile">Profile</string>
+    <string name="profile_header">Your Players</string>
+    <string name="profile_position_string">Position:</string>
+    <string name="profile_jersey_no_text">Jersey No:</string>
 
 
 </resources>

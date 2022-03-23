@@ -87,11 +87,12 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/btn_single_anim"
-                android:layout_width="50dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/single_animation"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                 android:text="@string/bin" />
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -105,12 +106,13 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/btn_multi_anim"
-                android:layout_width="41dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="12dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/multi_animation"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                 android:text="@string/bin" />
 
             <com.google.android.material.imageview.ShapeableImageView

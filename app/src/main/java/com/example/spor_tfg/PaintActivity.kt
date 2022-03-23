@@ -87,7 +87,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     // Color array
     val colors: ArrayList<String> = ArrayList()
 
-    private lateinit var teamsAL: ArrayList<Any>
+    private lateinit var doc: HashMap<Any, Any>
+    private lateinit var team: HashMap<Any, Any>
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,8 +212,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             when {
                 // We make sure only one flag is active at a time
                 multiAnimFlag -> {
-                    multiAnimFlag = false
-                    multiAnim.setBackgroundColor(Color.TRANSPARENT)
+                    deactivateMultiAnim()
                     framePaths = HashMap()
                     if (animationPaths.isNotEmpty()) {
                         frameNo++
@@ -222,8 +222,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 }
                 // Unselect single animation mode
                 singleAnimFlag -> {
-                    singleAnimFlag = false
-                    singleAnim.setBackgroundColor(Color.TRANSPARENT)
+                    deactivateSingleAnim()
                 }
                 // Select single animation mode
                 else -> {
@@ -237,15 +236,13 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             when {
                 // We make sure only one flag is active at a time
                 singleAnimFlag -> {
-                    singleAnimFlag = false
-                    singleAnim.setBackgroundColor(Color.TRANSPARENT)
+                    deactivateSingleAnim()
                     multiAnimFlag = true
                     multiAnim.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
                 }
                 // Unselect multi animation mode
                 multiAnimFlag -> {
-                    multiAnimFlag = false
-                    multiAnim.setBackgroundColor(Color.TRANSPARENT)
+                    deactivateMultiAnim()
                 }
                 // Select multi animation mode
                 else -> {
@@ -338,6 +335,16 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         allowDragIntoCanvas()
     }
 
+    private fun deactivateSingleAnim() {
+        singleAnimFlag = false
+        singleAnim.setBackgroundColor(Color.TRANSPARENT)
+    }
+
+    private fun deactivateMultiAnim() {
+        multiAnimFlag = false
+        multiAnim.setBackgroundColor(Color.TRANSPARENT)
+    }
+
     private fun setColorPickerColors() {
         colors.add("#FFFFFF") // White
         colors.add("#00171f") // Rich Black
@@ -388,18 +395,16 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (document != null) {
                     // Cast and ignore linter warnings
                     @Suppress("UNCHECKED_CAST")
-                    // Get team array list from user/coach ID
-                    teamsAL = document.data?.get("team") as ArrayList<Any>
-                    for ((idx, playerAL) in teamsAL.withIndex()) {
+                    doc = document.data as HashMap<Any, Any>
+
+                    // Cast and ignore linter warnings
+                    @Suppress("UNCHECKED_CAST")
+                    team = document.data?.get("team") as HashMap<Any, Any>
+
+                    for ((idx, player) in team) {
                         @Suppress("UNCHECKED_CAST")
-                        // Cast to HashMap else we can not iterate through each player key
-                        val player: HashMap<Any, Any> = playerAL as HashMap<Any, Any>
-                        for (key in player.keys) {
-                            val playerValue = player[key]
-                            if (key == "image") {
-                               downloadImage(playerValue as String, idx)
-                            }
-                        }
+                        player as HashMap<Any, Any>
+                        downloadImage(player["image"]  as String, idx.toString().toInt())
                     }
 
                 } else {
@@ -425,7 +430,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             imageButton.id = index
 
             // Setting image bitmaps
-            val imageBitmap: Bitmap = Bitmap.createScaledBitmap(bmp, 150, 150, false)
+            val imageBitmap: Bitmap = Bitmap.createScaledBitmap(bmp, 115, 115, false)
             val popUpImageBitmap: Bitmap = Bitmap.createScaledBitmap(bmp, 500, 500, false)
             val roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, imageBitmap)
 
@@ -445,14 +450,9 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun clickFunc(imageButton: ImageButton, bitmap: Bitmap) {
         imageButton.setOnClickListener {
-            val playerAL = teamsAL[imageButton.id]
             @Suppress("UNCHECKED_CAST")
             // Cast to HashMap else we can not iterate through each player key
-            val player: HashMap<Any, Any> = playerAL as HashMap<Any, Any>
-
-            /*for (key in player.keys) {
-
-            }*/
+            val player: HashMap<Any, Any> = team[imageButton.id] as HashMap<Any, Any>
             // Construct dialog
             val dialogBuilder = AlertDialog.Builder(this)
             val playerModalView: View = layoutInflater.inflate(R.layout.player_modal, null)
@@ -524,8 +524,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         cone.setOnLongClickListener {
             trainingEquipmentFlag = true
-            singleAnimFlag = false
-            multiAnimFlag = false
+            deactivateSingleAnim()
+            deactivateMultiAnim()
             val item = ClipData.Item(it.tag as? CharSequence)
 
             val dragData = ClipData(
@@ -554,8 +554,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         football.setOnLongClickListener {
             trainingEquipmentFlag = true
-            singleAnimFlag = false
-            multiAnimFlag = false
+            deactivateSingleAnim()
+            deactivateMultiAnim()
             val item = ClipData.Item(it.tag as? CharSequence)
 
             val dragData = ClipData(
@@ -584,8 +584,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         dummy.setOnLongClickListener {
             trainingEquipmentFlag = true
-            singleAnimFlag = false
-            multiAnimFlag = false
+            deactivateSingleAnim()
+            deactivateMultiAnim()
             val item = ClipData.Item(it.tag as? CharSequence)
 
             val dragData = ClipData(
@@ -614,8 +614,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         goalie.setOnLongClickListener {
             trainingEquipmentFlag = true
-            singleAnimFlag = false
-            multiAnimFlag = false
+            deactivateSingleAnim()
+            deactivateMultiAnim()
             val item = ClipData.Item(it.tag as? CharSequence)
 
             val dragData = ClipData(
@@ -766,6 +766,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             R.id.nav_profile -> {
                 val intent = Intent(this, ProfileActivity::class.java)
+                intent.putExtra("players_hash_map", doc)
                 startActivity(intent)
                 true
             }
