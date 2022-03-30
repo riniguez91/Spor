@@ -15,6 +15,11 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_baseline_supervised_user_circle_24"
             android:title="@string/menu_profile" />
+        <item
+            android:id="@+id/nav_video_editor"
+            android:icon="@drawable/ic_baseline_video_settings_24"
+            android:title="@string/menu_video_editor">
+        </item>
 
     </group>
 

@@ -81,9 +81,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         preselectToolbar()
 
         // Get team info
-        val bundle: Bundle = intent.extras!!
-        @Suppress("UNCHECKED_CAST")
-        doc = bundle.get("players_hash_map") as HashMap<Any, Any>
+        doc =  (this.application as MyApp).getDocVar()
 
         // Load coach data
         loadCoachData()
@@ -154,15 +152,23 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         layout.findViewById<TextView>(R.id.profile_player_card_position).text = position
         layout.findViewById<TextView>(R.id.profile_player_card_jersey_no).text = jersey_number.toString()
         layout.findViewById<TextView>(R.id.profile_player_card_leading_foot).text = leading_foot
-        if (status == "available") {
-            playerStatus.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.available))
-        }
-        else {
-            playerStatus.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.injured))
+        when (status) {
+            "available" -> {
+                playerStatus.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.available))
+            }
+            "partially available" -> {
+                playerStatus.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.partially_available))
+            }
+            "sick" -> {
+                playerStatus.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.sick))
+            }
+            else -> {
+                playerStatus.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.injured))
+            }
         }
 
         // Change available/injured state
-        val myItems = listOf("Available", "Injured")
+        val myItems = listOf("Available", "Injured", "Partially Available", "Sick")
         playerStatus.setOnClickListener {
             // We get the card ID
             val cardID = (it.parent.parent.parent.parent as View).id
@@ -178,11 +184,19 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                             )
                         )
                     // Change state accordingly
-                    if (text.toString().lowercase() == "available") {
-                        imageBtn.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.available))
-                    }
-                    else {
-                        imageBtn.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.injured))
+                    when {
+                        text.toString().lowercase() == "available" -> {
+                            imageBtn.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.available))
+                        }
+                        text.toString().lowercase() == "partially available" -> {
+                            imageBtn.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.partially_available))
+                        }
+                        text.toString().lowercase() == "sick" -> {
+                            imageBtn.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.sick))
+                        }
+                        else -> {
+                            imageBtn.setImageDrawable(ContextCompat.getDrawable(this@ProfileActivity, R.drawable.injured))
+                        }
                     }
                 }
                 positiveButton(text = "Confirm")
@@ -224,12 +238,16 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.nav_whiteboard -> {
-                println("h")
                 val intent = Intent(this, PaintActivity::class.java)
                 startActivity(intent)
                 true
             }
             R.id.nav_profile -> {
+                true
+            }
+            R.id.nav_video_editor -> {
+                val intent = Intent(this, VideoEditorActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> true

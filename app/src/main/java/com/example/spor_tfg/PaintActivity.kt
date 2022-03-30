@@ -3,10 +3,7 @@ package com.example.spor_tfg
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipDescription
-import android.content.ContentValues
-import android.content.Intent
+import android.content.*
 import android.graphics.*
 import android.os.Build
 import android.os.Bundle
@@ -25,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.spor_tfg.databinding.ActivityPaintBinding
 import com.google.android.material.imageview.ShapeableImageView
@@ -40,7 +36,7 @@ import com.google.firebase.storage.ktx.storage
 import petrov.kristiyan.colorpicker.ColorPicker
 import petrov.kristiyan.colorpicker.ColorPicker.OnFastChooseColorListener
 import java.io.OutputStream
-import kotlin.math.abs
+import kotlin.reflect.typeOf
 
 
 class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -253,15 +249,19 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
 
         done.setOnClickListener {
-            frameNo++
+            if (framePaths.isNotEmpty()) {
+                frameNo++
+                Toast.makeText(this, "Incremented frame number to: $frameNo", Toast.LENGTH_LONG).show()
+            }
+            else {
+                Toast.makeText(this, "You have not added any animations", Toast.LENGTH_LONG).show()
+            }
             framePaths = HashMap()
-
             // Unselect animation flags since we are playing the animations
             singleAnimFlag = false
             singleAnim.setBackgroundColor(Color.TRANSPARENT)
             multiAnimFlag = false
             multiAnim.setBackgroundColor(Color.TRANSPARENT)
-            // TODO("Check there is at least an animation corresponding to the frameNo")
         }
 
         animationColorButton.setOnClickListener {
@@ -295,7 +295,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             // {1: {{image_button1_id: path}, {image_button2_id: path}, ...}, ...}
             // animationPaths: HashMap<Int, HashMap<Int, Path>>
 
-            println("\nWhole hashmap $animationPaths\n")
+            deactivateSingleAnim()
+            deactivateMultiAnim()
 
             for ((frame, paths) in animationPaths) {
                 // Do something with frame (such as paint it in each animation path)
@@ -397,6 +398,9 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     @Suppress("UNCHECKED_CAST")
                     doc = document.data as HashMap<Any, Any>
 
+                    // Store doc as a global variable for all classes
+                    (this.application as MyApp).setDocVar(doc)
+
                     // Cast and ignore linter warnings
                     @Suppress("UNCHECKED_CAST")
                     team = document.data?.get("team") as HashMap<Any, Any>
@@ -404,7 +408,9 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     for ((idx, player) in team) {
                         @Suppress("UNCHECKED_CAST")
                         player as HashMap<Any, Any>
-                        downloadImage(player["image"]  as String, idx.toString().toInt())
+                        if (player["status"] == "available" || player["status"] == "partially available") {
+                            downloadImage(player["image"]  as String, idx.toString().toInt())
+                        }
                     }
 
                 } else {
@@ -450,9 +456,11 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun clickFunc(imageButton: ImageButton, bitmap: Bitmap) {
         imageButton.setOnClickListener {
+            println("Team: $team")
             @Suppress("UNCHECKED_CAST")
             // Cast to HashMap else we can not iterate through each player key
-            val player: HashMap<Any, Any> = team[imageButton.id] as HashMap<Any, Any>
+            val player = team[imageButton.id] as HashMap<Any, Any>?
+            println(player)
             // Construct dialog
             val dialogBuilder = AlertDialog.Builder(this)
             val playerModalView: View = layoutInflater.inflate(R.layout.player_modal, null)
@@ -464,11 +472,11 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             val img = playerModalView.findViewById<ShapeableImageView>(R.id.popUpImageContainer)
             img.setImageBitmap(bitmap)
             val txt: TextView = playerModalView.findViewById(R.id.popup_title)
-            txt.text = player["name"].toString()
+            txt.text = player?.get("name").toString()
             val popupPos: TextView = playerModalView.findViewById(R.id.popup_position)
-            popupPos.text = player["position"].toString()
+            popupPos.text = player?.get("position").toString()
             val popupJerseyNo: TextView = playerModalView.findViewById(R.id.popup_jersey_no)
-            popupJerseyNo.text = player["jersey_number"].toString()
+            popupJerseyNo.text = player?.get("jersey_number").toString()
             val btn: ImageView = playerModalView.findViewById<ImageView>(R.id.popup_close)
             btn.setOnClickListener {
                 dialog.dismiss()
@@ -766,7 +774,11 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             R.id.nav_profile -> {
                 val intent = Intent(this, ProfileActivity::class.java)
-                intent.putExtra("players_hash_map", doc)
+                startActivity(intent)
+                true
+            }
+            R.id.nav_video_editor -> {
+                val intent = Intent(this, VideoEditorActivity::class.java)
                 startActivity(intent)
                 true
             }

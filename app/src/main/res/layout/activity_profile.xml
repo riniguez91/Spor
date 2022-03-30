@@ -37,7 +37,6 @@
             android:layout_marginTop="60dp"
             android:adjustViewBounds="true"
             android:maxHeight="350dp"
-            android:src="@drawable/ancelotti"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             tools:srcCompat="@drawable/ancelotti" />
 
@@ -555,18 +554,5 @@
         android:fitsSystemWindows="true"
         app:menu="@menu/home_navigation_drawer"
         app:headerLayout="@layout/nav_header">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Right footed" />
-        </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>
