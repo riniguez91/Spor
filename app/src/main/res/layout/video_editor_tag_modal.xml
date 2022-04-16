@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/video_editor_tag_modal">
+
+    <TextView
+        android:id="@+id/tag_modal_text"
+        android:layout_width="match_parent"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:background="@drawable/roundstyle"
+        android:text="Attack (ATK)"
+        android:fontFamily="@font/nexa_light"
+        android:textSize="24sp"
+        android:textAlignment="viewStart"
+        android:layout_margin="70dp"
+        android:padding="10dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="25dp"
+        android:drawablePadding="7dp"
+        android:layout_marginEnd="15dp"/>
+    <TextView
+        android:id="@+id/tag_modal_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:fontFamily="@font/nexa_bold"
+        android:padding="10dp"
+        android:paddingEnd="20sp"
+        android:layout_margin="70dp"
+        android:text="- 3:01"
+        android:textAlignment="viewEnd"
+        android:textSize="24sp" />
+</RelativeLayout>

@@ -21,7 +21,8 @@
             android:theme="@style/Theme.Spor_TFG.CustomToolbar"/>
 
         <LinearLayout
-            android:id="@+id/linearLayout3"
+            android:id="@+id/editing_actions_ll"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -39,50 +40,62 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/btn_undo"
-                android:layout_width="52dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="15dp"
+                android:id="@+id/btn_spotlight"
+                android:layout_width="80dp"
+                android:layout_height="70dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
-                android:src="@drawable/ic_undo"
+                android:src="@drawable/ic_spotlight"
+                android:background="@android:color/transparent"
                 android:text="@string/undo" />
 
+            <!--<com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/spotlight_test"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/spotlight"
+                android:background="@android:color/transparent"
+                android:text="@string/undo" />-->
+
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/btn_save"
-                android:layout_width="36dp"
+                android:id="@+id/btn_blue_circle"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
-                android:src="@drawable/paint_brush"
+                android:src="@drawable/ic_circle"
                 android:text="@string/save" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/btn_color"
-                android:layout_width="40dp"
+                android:id="@+id/btn_up_arrow"
+                android:layout_width="68dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
-                android:src="@drawable/paint_brush"
+                android:src="@drawable/up_arrow"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                 android:text="@string/color" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/btn_bin"
-                android:layout_width="43dp"
+                android:id="@+id/btn_polygon"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/todo"
-                android:src="@drawable/paint_brush"
+                android:src="@drawable/polygon"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                 android:text="@string/bin" />
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/video_editor_main_rl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="match_parent"
+            android:background="@color/black"
             android:orientation="vertical">
 
             <LinearLayout
@@ -90,66 +103,140 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:translationZ="90dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:translationZ="90dp">
+
                 <TextView
                     android:id="@+id/video_editor_modal_upload"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/nexa_light"
+                    android:paddingTop="15dp"
                     android:text="Upload Video"
                     android:textColor="@color/white"
                     android:textSize="35sp"
-                    android:paddingTop="15dp"
-                    android:fontFamily="@font/nexa_light"
-                    app:drawableTopCompat="@drawable/ic_baseline_cloud_upload_24"
-                    android:drawablePadding="10dp"
-                    />
+                    app:drawableTopCompat="@drawable/ic_baseline_cloud_upload_24" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="OR"
-                    android:textColor="@color/white"
-                    android:textSize="40sp"
+                    android:layout_gravity="center"
                     android:fontFamily="@font/nexa_bold"
                     android:paddingStart="30dp"
                     android:paddingEnd="30dp"
-                    android:layout_gravity="center"
-                    />
+                    android:text="OR"
+                    android:textColor="@color/white"
+                    android:textSize="40sp" />
+
                 <TextView
                     android:id="@+id/video_editor_modal_load"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/nexa_light"
+                    android:paddingTop="15dp"
                     android:text="Load Video"
                     android:textColor="@color/white"
                     android:textSize="35sp"
-                    android:paddingTop="15dp"
-                    android:fontFamily="@font/nexa_light"
-                    app:drawableTopCompat="@drawable/ic_baseline_download_24"
-                    android:drawablePadding="10dp"/>
+                    app:drawableTopCompat="@drawable/ic_baseline_download_24" />
 
             </LinearLayout>
 
-            <VideoView
-                android:id="@+id/videoView"
+            <RelativeLayout
+                android:id="@+id/video_ui_rl"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
+                android:layout_height="700dp"
+                android:scaleType="fitXY">
+
+                <VideoView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true" />
+
+                <com.example.spor_tfg.VEDrawView
+                    android:id="@+id/ve_draw_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    />
+
+            </RelativeLayout>
 
             <ProgressBar
                 android:id="@+id/video_editor_pb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:indeterminate="true"
                 android:indeterminateDrawable="@drawable/progress_bg"
                 android:progress="0"
-                android:visibility="invisible"
-                android:layout_centerInParent="true">
-            </ProgressBar>
+                android:visibility="invisible"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/big_spotlight"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:visibility="invisible"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/big_blue_circle"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/circle"
+                android:visibility="invisible"/>
+
+            <LinearLayout
+                android:id="@+id/video_editor_frame_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/video_ui_rl"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="135dp"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/video_editor_frame_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/roundstyle"
+                    android:enabled="true"
+                    android:padding="12dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:layout_marginEnd="100dp"
+                    android:fontFamily="@font/nexa_bold"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:text="Cancel"
+                    app:backgroundTint="@color/colorAccent"
+                    style="?android:attr/buttonBarButtonStyle" />
+                <Button
+                    android:id="@+id/video_editor_frame_confirmation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/roundstyle"
+                    android:enabled="true"
+                    android:padding="12dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:fontFamily="@font/nexa_bold"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:text="Confirm"
+                    app:backgroundTint="@color/colorAccent"
+                    style="?android:attr/buttonBarButtonStyle" />
+            </LinearLayout>
 
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/video_editor_tags_ll"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:weightSum="2"
@@ -207,6 +294,7 @@
                     android:layout_height="wrap_content"
                     android:columnCount="2">
                     <TextView
+                        android:id="@+id/video_editor_atk_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -220,6 +308,7 @@
                         android:layout_marginEnd="15dp"
                         android:layout_marginBottom="20dp"/>
                     <TextView
+                        android:id="@+id/video_editor_def_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -233,6 +322,7 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginEnd="15dp"/>
                     <TextView
+                        android:id="@+id/video_editor_ti_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -246,6 +336,7 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginEnd="15dp" />
                     <TextView
+                        android:id="@+id/video_editor_hb_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -259,6 +350,7 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginEnd="15dp" />
                     <TextView
+                        android:id="@+id/video_editor_cor_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -272,6 +364,7 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginEnd="15dp" />
                     <TextView
+                        android:id="@+id/video_editor_gk_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -285,6 +378,7 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginEnd="15dp" />
                     <TextView
+                        android:id="@+id/video_editor_fou_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -298,6 +392,7 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginEnd="15dp" />
                     <TextView
+                        android:id="@+id/video_editor_fk_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -311,6 +406,7 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginEnd="15dp" />
                     <TextView
+                        android:id="@+id/video_editor_py_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
@@ -324,6 +420,8 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginEnd="15dp" />
                     <TextView
+                        android:id="@+id/video_editor_off_label"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"

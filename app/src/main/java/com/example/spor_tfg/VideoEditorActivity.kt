@@ -2,27 +2,46 @@ package com.example.spor_tfg
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipDescription
 import android.content.Intent
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.shapes.Shape
+import android.media.MediaMetadataRetriever
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.MenuItem
-import android.view.View
+import android.util.Log
+import android.view.*
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.afollestad.materialdialogs.DialogBehavior
+import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.ModalDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.example.spor_tfg.databinding.ActivityVideoEditorBinding
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.shape.Shapeable
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import com.gowtham.library.utils.LogMessage
+import com.gowtham.library.utils.TrimVideo
 
 
 class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -35,14 +54,50 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     lateinit var drawerLayout: DrawerLayout
     lateinit var navigationView: NavigationView
 
+    lateinit var modalView: View
+
+    // Buttons
+    lateinit var btnSpotlight: ShapeableImageView
+    lateinit var btnBlueCircle: ShapeableImageView
+    lateinit var btnUpArrow: ShapeableImageView
+    lateinit var btnPolygon: ShapeableImageView
+
+    // Video view
+    lateinit var editingActionsLL: LinearLayout
     lateinit var videoView: VideoView
+    lateinit var tagsLL: LinearLayout
+    lateinit var mediaMetadataRetriever: MediaMetadataRetriever
     lateinit var progressBar: ProgressBar
     lateinit var chooseVideoLL: LinearLayout
+    lateinit var mainRL: RelativeLayout
+    lateinit var frameButtons: LinearLayout
+    lateinit var frameConfirmationBttn: Button
+    lateinit var frameCancelBttn: Button
+    lateinit var veDrawView: VEDrawView
+    var videoLastPos: Int = 0
+
+    // Frame editing flags
+    var arrowFlag: Boolean = false
+    var polygonFlag: Boolean = false
+
+    // Tags
+    lateinit var atkLabel: TextView
+    lateinit var defLabel: TextView
+    lateinit var tiLabel: TextView
+    lateinit var hbLabel: TextView
+    lateinit var corLabel: TextView
+    lateinit var gkLabel: TextView
+    lateinit var fouLabel: TextView
+    lateinit var fkLabel: TextView
+    lateinit var pyLabel: TextView
+    lateinit var offLabel: TextView
 
     lateinit var doc: HashMap<Any, Any>
 
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
+    @RequiresApi(Build.VERSION_CODES.N)
+    @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_editor)
@@ -50,14 +105,41 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         binding = ActivityVideoEditorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        modalView = layoutInflater.inflate(R.layout.video_editor_tag_modal, null)
+
         // Navigation hooks
         navigationView = findViewById(R.id.video_editor_navigation_view)
         navigationView.setNavigationItemSelectedListener(this)
 
+        // Drag & Drop hooks
+        btnSpotlight = findViewById(R.id.btn_spotlight)
+        btnBlueCircle = findViewById(R.id.btn_blue_circle)
+        btnUpArrow = findViewById(R.id.btn_up_arrow)
+        btnPolygon = findViewById(R.id.btn_polygon)
+
         // Video hooks
+        editingActionsLL = findViewById(R.id.editing_actions_ll)
         videoView = findViewById(R.id.videoView)
+        tagsLL = findViewById(R.id.video_editor_tags_ll)
         progressBar = findViewById(R.id.video_editor_pb)
         chooseVideoLL = findViewById(R.id.choose_video_ll)
+        mainRL = findViewById(R.id.video_editor_main_rl)
+        frameButtons = findViewById(R.id.video_editor_frame_buttons)
+        frameConfirmationBttn = findViewById(R.id.video_editor_frame_confirmation)
+        frameCancelBttn = findViewById(R.id.video_editor_frame_cancel)
+        veDrawView = findViewById(R.id.ve_draw_view)
+
+        // Tag hooks
+        atkLabel = findViewById(R.id.video_editor_atk_label)
+        defLabel = findViewById(R.id.video_editor_def_label)
+        tiLabel = findViewById(R.id.video_editor_ti_label)
+        hbLabel = findViewById(R.id.video_editor_hb_label)
+        corLabel = findViewById(R.id.video_editor_cor_label)
+        gkLabel = findViewById(R.id.video_editor_gk_label)
+        fouLabel = findViewById(R.id.video_editor_fou_label)
+        fkLabel = findViewById(R.id.video_editor_fk_label)
+        pyLabel = findViewById(R.id.video_editor_py_label)
+        offLabel = findViewById(R.id.video_editor_off_label)
 
         // Init toolbar
         initToolbar()
@@ -71,34 +153,396 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         // Load video click func
         loadVideoIconClickFunc()
 
+        // Add tags click func
+        tagsClickFunc()
+
+        //Kotlin
+        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK && it.data != null) {
+                val uri = Uri.parse(TrimVideo.getTrimmedVideoPath(it.data))
+                // Upload video to firestore
+                println("Video URI:: $uri")
+
+                // Set video in videoView
+                initVideo("", uri)
+            } else
+                LogMessage.v("videoTrimResultLauncher data is null")
+        }
+
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it!!.resultCode == Activity.RESULT_OK) {
                 val videoURI = it.data!!.data
-                // Upload video to firestore after calling edit video functionality
-                println(videoURI)
+                // Edit video functionality
+                TrimVideo.activity(videoURI.toString())
+                    .setHideSeekBar(true)
+                    .start(this, startForResult)
+            }
+        }
+
+        // Spotlight button func
+        spotlight()
+
+        // Blue botton circle func
+        blueCircle()
+
+        // Up arrow func
+        upArrow()
+
+        // Polygon func
+        polygon()
+
+        veDrawView.init()
+        veDrawView.bringToFront()
+
+        // Dimensions for the VEDrawView canvas
+        /*val vto = paint.viewTreeObserver
+        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                paint.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val width = paint.measuredWidth
+                val height = paint.measuredHeight
+                paint.init(height, width)
+            }
+        })*/
+    }
+
+    private fun changeArrowFlagStatus(flag: Boolean, color: Int) {
+        arrowFlag = flag
+        veDrawView.setArrowVal(flag)
+        btnUpArrow.setBackgroundColor(color)
+    }
+
+    private fun changePolygonFlagStatus(flag: Boolean, color: Int) {
+        polygonFlag = flag
+        veDrawView.setPolygonVal(flag)
+        btnPolygon.setBackgroundColor(color)
+    }
+
+    private fun upArrow() {
+        btnUpArrow.setOnClickListener {
+            when {
+                // We make sure only one flag is active at a time
+                polygonFlag -> {
+                    changePolygonFlagStatus(false, Color.TRANSPARENT)
+                    changeArrowFlagStatus(true, Color.WHITE)
+                    if (veDrawView.polygonInserted) {
+                        // No new polygons will be added for this shape
+                        veDrawView.polygonInserted = false
+                        // Increment polygonNo since the current polygon is finished
+                        veDrawView.polygonNo++
+                    }
+                }
+                arrowFlag -> {
+                    changeArrowFlagStatus(false, Color.TRANSPARENT)
+                }
+                else -> {
+                    changeArrowFlagStatus(true, Color.WHITE)
+                }
             }
         }
 
     }
 
-    private fun initVideo(videoName: String) {
+    private fun polygon() {
+        btnPolygon.setOnClickListener {
+            when {
+                // We make sure only one flag is active at a time
+                arrowFlag -> {
+                    changeArrowFlagStatus(false, Color.TRANSPARENT)
+                    changePolygonFlagStatus(true, Color.WHITE)
+                }
+                polygonFlag -> {
+                    changePolygonFlagStatus(false, Color.TRANSPARENT)
+                }
+                else -> {
+                    changePolygonFlagStatus(true, Color.WHITE)
+                }
+            }
+
+            if (veDrawView.polygonInserted) {
+                // No new polygons will be added for this shape
+                veDrawView.polygonInserted = false
+                // Increment polygonNo since the current polygon is finished
+                veDrawView.polygonNo++
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun blueCircle() {
+        val tag: String = "blue circle"
+        btnBlueCircle.tag = tag
+
+        btnBlueCircle.setOnLongClickListener {
+            val item = ClipData.Item(it.tag as? CharSequence)
+
+            val dragData = ClipData(
+                it.tag as? CharSequence,
+                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+                item)
+
+            // Create bigger shadow image (actual size of what will be dropped on the canvas)
+            val bigBlueCircle: ShapeableImageView = findViewById(R.id.big_blue_circle)
+            // bigBlueCircle.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.blue_circle))
+            bigBlueCircle.layoutParams = RelativeLayout.LayoutParams(300, 300)
+
+            // Instantiate the drag shadow builder.
+            val myShadow = View.DragShadowBuilder(bigBlueCircle)
+            /*Toast.makeText(this, "Height: ${myShadow.view.height} || Width: ${myShadow.view.width}\n" +
+                    "LayoutParams Height: ${myShadow.view.layoutParams.height} || LayoutParams Width: ${myShadow.view.layoutParams.width}",
+                Toast.LENGTH_LONG).show()*/
+
+            // Start the drag.
+            it.startDragAndDrop(dragData,  // The data to be dragged
+                myShadow,  // The drag shadow builder
+                btnBlueCircle,      // No need to use local data
+                0          // Flags (not currently used, set to 0)
+            )
+
+            true
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun spotlight() {
+        val tag: String = "spotlight"
+        btnSpotlight.tag = tag
+
+        btnSpotlight.setOnLongClickListener {
+            val item = ClipData.Item(it.tag as? CharSequence)
+
+            val dragData = ClipData(
+                it.tag as? CharSequence,
+                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+                item)
+
+            // Create bigger shadow image (actual size of what will be dropped on the canvas)
+            val bigSpotlight: ShapeableImageView = findViewById(R.id.big_spotlight)
+            bigSpotlight.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.spotlight_v3))
+            bigSpotlight.layoutParams = RelativeLayout.LayoutParams(600, 600)
+
+            // Instantiate the drag shadow builder.
+            val myShadow = View.DragShadowBuilder(bigSpotlight)
+            /*Toast.makeText(this, "Height: ${myShadow.view.height} || Width: ${myShadow.view.width}\n" +
+                    "LayoutParams Height: ${myShadow.view.layoutParams.height} || LayoutParams Width: ${myShadow.view.layoutParams.width}",
+                Toast.LENGTH_LONG).show()*/
+
+            // Start the drag.
+            it.startDragAndDrop(dragData,  // The data to be dragged
+                myShadow,  // The drag shadow builder
+                btnSpotlight,      // No need to use local data
+                0          // Flags (not currently used, set to 0)
+            )
+
+            true
+        }
+
+    }
+
+    private fun tagsClickFunc() {
+        val textViewArray = arrayOf<TextView>(atkLabel, defLabel, tiLabel, hbLabel, corLabel, gkLabel, fouLabel, fkLabel, pyLabel, offLabel)
+
+        for (tv in textViewArray) {
+            tv.setOnClickListener {
+                // Pause videoView
+                videoView.pause()
+
+                // Get time(returned in ms) and insert it into tags
+                videoLastPos = videoView.currentPosition
+                modalView.findViewById<TextView>(R.id.tag_modal_text).text = tv.text
+                val mins: Int = (videoView.currentPosition / 1000) / 60
+                val secs: Int = (videoView.currentPosition / 1000 ) % 60
+                modalView.findViewById<TextView>(R.id.tag_modal_time).text = String.format("%02d:%02d", mins, secs)
+                showCustomViewDialog(BottomSheet(LayoutMode.WRAP_CONTENT))
+            }
+        }
+
+
+    }
+
+    private fun showCustomViewDialog(dialogBehavior: DialogBehavior = ModalDialog) {
+        val dialog = MaterialDialog(this, dialogBehavior).show {
+            title(text = "Confirm action")
+            message(text = "Are you sure you want to add the following tag")
+            customView(R.layout.video_editor_tag_modal, modalView, scrollable = true, horizontalPadding = true)
+            positiveButton(text = "Confirm") { dialog ->
+                // Allow user to optionally edit frame by adding spotlights, arrows etc.
+                editFrame()
+
+                // Resume video
+                videoView.start()
+            }
+            negativeButton(android.R.string.cancel)
+        }
+    }
+
+    private fun editFrame() {
+        changeToFrameEditing(true)
+        // Create bitmap from
+        val bmFrame: Bitmap = mediaMetadataRetriever.getFrameAtTime((videoView.currentPosition * 1000).toLong(), MediaMetadataRetriever.OPTION_CLOSEST)!!
+        mainRL.setBackgroundColor(ContextCompat.getColor(this, R.color.primaryDark))
+
+        veDrawView.background = BitmapDrawable(resources, bmFrame)
+        veDrawView.setOnDragListener { v, e ->
+
+            // Image being dragged
+            val image = e.localState as View
+
+            // Handles each of the expected events.
+            when (e.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    // Determines if this View can accept the dragged data.
+                    e.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                    v.invalidate()
+                    true
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    // Returns true; the value is ignored.
+                    v.invalidate()
+                    true
+                }
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    v.invalidate()
+                    true
+                }
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    // Returns true; the value is ignored.
+                    v.invalidate()
+                    true
+                }
+                DragEvent.ACTION_DROP -> {
+                    // Create a copy of the image and add it to the view (we can have multiple training equipment images of the same type)
+                    val imgClone: ShapeableImageView = ShapeableImageView(this@VideoEditorActivity)
+                    image as ShapeableImageView
+                    // Set image attributes
+                    imgClone.setImageDrawable(image.drawable)
+                    imgClone.requestLayout()
+                    imgClone.setOnClickListener {
+                        // TODO("Maybe show dialog to confirm user really wants to remove image view")
+                        (imgClone.parent as ViewGroup).removeView(imgClone)
+                    }
+
+                    // Set dimensions
+                    if (image.tag == "spotlight") {
+                        imgClone.alpha = 0.77f
+                        imgClone.x = e.x - (2 * image.width)
+                        imgClone.y = e.y - (2 * image.height)
+                        imgClone.layoutParams = ViewGroup.LayoutParams(600, 600)
+                    }
+                    else if (image.tag == "blue circle") {
+                        imgClone.x = e.x - (image.width)
+                        imgClone.y = e.y - (image.height)
+                        imgClone.layoutParams = ViewGroup.LayoutParams(300, 300)
+                    }
+                    // Add view
+                    // to the frame bitmap
+                    veDrawView.addView(imgClone)
+
+
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    // Invalidates the view to force a redraw.
+                    v.invalidate()
+                    // Returns true; the value is ignored.
+                    true
+                }
+                else -> {
+                    // An unknown action type was received.
+                    Log.e("DragDrop Example", "Unknown action type received by View.OnDragListener.")
+                    false
+                }
+            }
+        }
+
+        // User confirms frame editing
+        frameConfirmationBttn.setOnClickListener {
+            // Insert the tag into firestore
+
+
+            // Insert tag into the video layout
+
+
+            // Go back and play video where it was last paused
+            videoView.seekTo(videoLastPos)
+            veDrawView.resetView()
+
+            // Make previous elements visible again and frame editing elements invisible
+            changeToFrameEditing(false)
+        }
+
+        // User cancels frame editing
+        frameCancelBttn.setOnClickListener {
+            // Go back and play video where it was last paused
+            videoView.seekTo(videoLastPos)
+            veDrawView.resetView()
+
+            // Make previous elements visible again and frame editing elements invisible
+            changeToFrameEditing(false)
+        }
+
+    }
+
+    fun changeToFrameEditing(flag: Boolean) {
+        if (flag) {
+            // Make videoView invisible and veDrawView visible
+            editingActionsLL.visibility = View.VISIBLE
+            videoView.visibility = View.INVISIBLE
+            veDrawView.visibility = View.VISIBLE
+
+            // Show frame buttons and hide tags
+            frameButtons.visibility = View.VISIBLE
+            tagsLL.visibility = View.INVISIBLE
+        }
+        else {
+            // Make videoView visible and veDrawView invisible
+            editingActionsLL.visibility = View.GONE
+            videoView.visibility = View.VISIBLE
+            veDrawView.visibility = View.INVISIBLE
+
+            // Hide frame buttons and show tags
+            frameButtons.visibility = View.GONE
+            tagsLL.visibility = View.VISIBLE
+        }
+    }
+
+    @JvmOverloads
+     fun initVideo(videoName: String = "", videoURI: Uri = Uri.EMPTY) {
+        // Make video choosing linear layout invisible
+        chooseVideoLL.visibility = View.INVISIBLE
+        // Set parent container to video height
+        mainRL.layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT
+
         // Creating MediaController
         val mediaController: MediaController = MediaController(this)
         mediaController.setAnchorView(videoView)
+        mediaMetadataRetriever = MediaMetadataRetriever()
 
-        // Download video
+        // Assign videoView options
         progressBar.visibility = View.VISIBLE
-        storage.reference.child(auth.uid.toString()+ "/videos/" + videoName).downloadUrl.addOnSuccessListener {
-            videoView.setMediaController(mediaController)
-            videoView.canSeekBackward()
-            videoView.canSeekForward()
-            videoView.setVideoPath(it.toString())
-            videoView.setOnPreparedListener {
-                progressBar.visibility = View.INVISIBLE
-                videoView.start()
+        videoView.setMediaController(mediaController)
+        videoView.canSeekBackward()
+        videoView.canSeekForward()
+        videoView.setOnPreparedListener {
+            progressBar.visibility = View.INVISIBLE
+            videoView.start()
+        }
+        if (videoURI == Uri.EMPTY) {
+            storage.reference.child(auth.uid.toString()+ "/videos/" + videoName).downloadUrl.addOnSuccessListener {
+                // Set videoView path
+                videoView.setVideoPath(it.toString())
+                // Set mediaMetadataRetriever path
+                mediaMetadataRetriever.setDataSource(it.toString())
+            }.addOnFailureListener {
+                TODO("Handle errors here")
             }
-        }.addOnFailureListener {
-            TODO("Handle errors here")
+        }
+        else {
+            // Set videoView URI
+            videoView.setVideoURI(videoURI)
+            // Set mediaMetadataRetriever URI
+            mediaMetadataRetriever.setDataSource(this@VideoEditorActivity, videoURI)
         }
     }
 
@@ -110,7 +554,9 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
         // Download video
         findViewById<TextView>(R.id.video_editor_modal_load).setOnClickListener {
-            loadVideo()
+            initVideo("", Uri.parse("/storage/emulated/0/Android/data/com.example.spor_tfg/files/TrimmedVideo/trimmed_video_2022_3_12_12_17_48..mp4"))
+            // initVideo("", Uri.parse("C://Users//rinig//Desktop//Spor%20TFG//madrid_psg.mp4"))
+            // loadVideo()
         }
 
     }
@@ -131,7 +577,6 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 text = "Please select the video you wish to edit: "
             )
             listItemsSingleChoice(items = myItems) { dialog, index, text ->
-                chooseVideoLL.visibility = View.INVISIBLE
                 initVideo(text.toString())
             }
             positiveButton(text = "Confirm")

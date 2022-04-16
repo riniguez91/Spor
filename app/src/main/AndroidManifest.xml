@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.spor_tfg">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
+
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -15,7 +19,7 @@
         <activity
             android:name=".VideoEditorActivity"
             android:exported="true"
-            android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
+            android:theme="@style/Theme.Spor_TFG.NoActionBar" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false"
@@ -55,8 +59,10 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Spor_TFG.NoActionBar">
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 </manifest>
