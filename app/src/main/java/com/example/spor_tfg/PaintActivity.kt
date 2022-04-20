@@ -140,6 +140,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Saves current canvas to storage as a PNG
         save.setOnClickListener {
             val bmp = paint.save()
+            val canvas = Canvas(bmp!!)
+            paint.draw(canvas)
 
             // opening a OutputStream to write into the file
             val imageOutStream: OutputStream?
@@ -163,7 +165,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 imageOutStream = contentResolver.openOutputStream(uri!!)
 
                 // this method writes the files in storage
-                bmp?.compress(Bitmap.CompressFormat.PNG, 100, imageOutStream)
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, imageOutStream)
 
                 // close the output stream after use
                 imageOutStream!!.close()

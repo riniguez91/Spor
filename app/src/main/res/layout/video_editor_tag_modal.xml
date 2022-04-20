@@ -11,7 +11,7 @@
         android:textColor="@color/black"
         android:layout_height="wrap_content"
         android:background="@drawable/roundstyle"
-        android:text="Attack (ATK)"
+        android:text="TE (TE)"
         android:fontFamily="@font/nexa_light"
         android:textSize="24sp"
         android:textAlignment="viewStart"
@@ -30,7 +30,7 @@
         android:padding="10dp"
         android:paddingEnd="20sp"
         android:layout_margin="70dp"
-        android:text="- 3:01"
+        android:text="- 1:02"
         android:textAlignment="viewEnd"
         android:textSize="24sp" />
 </RelativeLayout>

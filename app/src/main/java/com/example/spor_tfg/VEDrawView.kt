@@ -185,7 +185,6 @@ class VEDrawView : RelativeLayout {
                 // Draw paths
                 if (index == 0) polPath.moveTo(point.x, point.y)
                 else polPath.lineTo(point.x, point.y)
-                // polPaint.blendMode = BlendMode.SRC_ATOP
                 polPaint.style = Paint.Style.FILL
                 polPaint.color = Color.WHITE
                 polPaint.alpha = 100

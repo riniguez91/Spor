@@ -30,18 +30,29 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.ModalDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.example.spor_tfg.databinding.ActivityVideoEditorBinding
+import com.google.android.gms.tasks.Task
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.shape.Shapeable
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.ktx.storageMetadata
 import com.gowtham.library.utils.LogMessage
 import com.gowtham.library.utils.TrimVideo
+import org.w3c.dom.Text
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
 
 
 class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +61,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
     private var storage: FirebaseStorage = Firebase.storage
     private var auth: FirebaseAuth = Firebase.auth
+    private val db: FirebaseFirestore = Firebase.firestore
 
     lateinit var drawerLayout: DrawerLayout
     lateinit var navigationView: NavigationView
@@ -75,12 +87,18 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     lateinit var frameCancelBttn: Button
     lateinit var veDrawView: VEDrawView
     var videoLastPos: Int = 0
+    lateinit var bmFrame: Bitmap
+    lateinit var selectedTag: String
+    lateinit var selectedFrame: Bitmap
+    lateinit var videoFolder: String
+    lateinit var uri: Uri
 
     // Frame editing flags
     var arrowFlag: Boolean = false
     var polygonFlag: Boolean = false
 
     // Tags
+    lateinit var loadedTagsLL: LinearLayout
     lateinit var atkLabel: TextView
     lateinit var defLabel: TextView
     lateinit var tiLabel: TextView
@@ -91,13 +109,17 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     lateinit var fkLabel: TextView
     lateinit var pyLabel: TextView
     lateinit var offLabel: TextView
+    lateinit var goaLabel: TextView
+    lateinit var dgoaLabel: TextView
+    lateinit var ycarLabel: TextView
+    lateinit var rcarLabel: TextView
 
     lateinit var doc: HashMap<Any, Any>
 
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     @RequiresApi(Build.VERSION_CODES.N)
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams", "CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_editor)
@@ -130,6 +152,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         veDrawView = findViewById(R.id.ve_draw_view)
 
         // Tag hooks
+        loadedTagsLL = findViewById(R.id.loaded_tags_ll)
         atkLabel = findViewById(R.id.video_editor_atk_label)
         defLabel = findViewById(R.id.video_editor_def_label)
         tiLabel = findViewById(R.id.video_editor_ti_label)
@@ -140,6 +163,10 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         fkLabel = findViewById(R.id.video_editor_fk_label)
         pyLabel = findViewById(R.id.video_editor_py_label)
         offLabel = findViewById(R.id.video_editor_off_label)
+        goaLabel = findViewById(R.id.video_editor_goa_label)
+        dgoaLabel = findViewById(R.id.video_editor_dgoa_label)
+        ycarLabel = findViewById(R.id.video_editor_ycar_label)
+        rcarLabel = findViewById(R.id.video_editor_rcar_label)
 
         // Init toolbar
         initToolbar()
@@ -159,12 +186,40 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         //Kotlin
         val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                val uri = Uri.parse(TrimVideo.getTrimmedVideoPath(it.data))
-                // Upload video to firestore
-                println("Video URI:: $uri")
+                // Video URI
+                uri = Uri.parse(TrimVideo.getTrimmedVideoPath(it.data))
+                println("URI:: $uri")
 
-                // Set video in videoView
-                initVideo("", uri)
+                MaterialDialog(this).show {
+                    input(hint = "Video name...") { dialog, text ->
+                        // Video folder path name
+                        videoFolder = text.toString().lowercase()
+                        // Video name
+                        val videoName: String = text.toString().lowercase() + ".mp4"
+                        val idx: Int = (doc["videos"] as HashMap<*, *>).size
+
+                        // Update field in user doc
+                        db.collection("user").document(auth.uid.toString()).update(
+                            mapOf(
+                                "videos.${idx}" to videoName
+                            )
+                        )
+
+                        // Upload video to firestore
+                        val file = Uri.fromFile(File(uri.toString()))
+                        val videoRef = storage.reference.child("${auth.uid.toString()}/videos/$videoName")
+                        val uploadTask = videoRef.putFile(file)
+                        uploadTask.addOnFailureListener{
+                            Toast.makeText(this@VideoEditorActivity, "There was an error uploading the video, please try again.", Toast.LENGTH_SHORT).show()
+                        }.addOnSuccessListener {
+                            Toast.makeText(this@VideoEditorActivity, "Uploaded successfully!", Toast.LENGTH_SHORT).show()
+                            // Set video in videoView
+                            initVideo("", uri)
+                        }
+                    }
+                    title(text = "Enter video name")
+                    positiveButton(text = "Submit")
+                }
             } else
                 LogMessage.v("videoTrimResultLauncher data is null")
         }
@@ -204,6 +259,22 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 paint.init(height, width)
             }
         })*/
+    }
+
+    private fun loadTags() {
+        val framesRef = storage.reference.child("${auth.uid.toString()}/videos/${videoFolder}/")
+        // Obtain list of tags
+        framesRef.listAll().addOnSuccessListener { listResult ->
+            // Iterate through them and get their metadata to load the tag on the app
+            listResult.items.forEach{ item ->
+                item.metadata.addOnSuccessListener {
+                    addLoadedTag(it.getCustomMetadata("tag")!!, it.getCustomMetadata("time_int")!!.toInt())
+                    // it.name TODO("This is the name of file")
+                }
+            }
+        }.addOnFailureListener {
+
+        }
     }
 
     private fun changeArrowFlagStatus(flag: Boolean, color: Int) {
@@ -340,12 +411,15 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     private fun tagsClickFunc() {
-        val textViewArray = arrayOf<TextView>(atkLabel, defLabel, tiLabel, hbLabel, corLabel, gkLabel, fouLabel, fkLabel, pyLabel, offLabel)
+        val textViewArray = arrayOf<TextView>(atkLabel, defLabel, tiLabel, hbLabel, corLabel, gkLabel, fouLabel, fkLabel, pyLabel, offLabel,
+                                              goaLabel, dgoaLabel, ycarLabel, rcarLabel)
 
         for (tv in textViewArray) {
             tv.setOnClickListener {
                 // Pause videoView
                 videoView.pause()
+
+                selectedTag = tv.text.toString()
 
                 // Get time(returned in ms) and insert it into tags
                 videoLastPos = videoView.currentPosition
@@ -379,7 +453,8 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     private fun editFrame() {
         changeToFrameEditing(true)
         // Create bitmap from
-        val bmFrame: Bitmap = mediaMetadataRetriever.getFrameAtTime((videoView.currentPosition * 1000).toLong(), MediaMetadataRetriever.OPTION_CLOSEST)!!
+        println("Video last pos: $videoLastPos")
+        bmFrame = mediaMetadataRetriever.getFrameAtTime((videoLastPos * 1000).toLong(), MediaMetadataRetriever.OPTION_CLOSEST)!!
         mainRL.setBackgroundColor(ContextCompat.getColor(this, R.color.primaryDark))
 
         veDrawView.background = BitmapDrawable(resources, bmFrame)
@@ -459,14 +534,15 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         // User confirms frame editing
         frameConfirmationBttn.setOnClickListener {
             // Insert the tag into firestore
-
+            uploadFrameToFirestore()
 
             // Insert tag into the video layout
-
+            addLoadedTag(selectedTag, videoLastPos)
 
             // Go back and play video where it was last paused
             videoView.seekTo(videoLastPos)
             veDrawView.resetView()
+            veDrawView.removeAllViews()
 
             // Make previous elements visible again and frame editing elements invisible
             changeToFrameEditing(false)
@@ -477,11 +553,79 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             // Go back and play video where it was last paused
             videoView.seekTo(videoLastPos)
             veDrawView.resetView()
+            veDrawView.removeAllViews()
 
             // Make previous elements visible again and frame editing elements invisible
             changeToFrameEditing(false)
         }
 
+    }
+
+    @SuppressLint("InflateParams")
+    private fun addLoadedTag(text: String, time: Int) {
+        // Set minutes and seconds from int position
+        val mins: Int = (time / 1000) / 60
+        val secs: Int = (time / 1000 ) % 60
+
+        // Set tag info (time + text)
+        val tag: View = layoutInflater.inflate(R.layout.video_editor_tag, null)
+        val tagInModal: View = layoutInflater.inflate(R.layout.video_editor_tag, null)
+        tag.findViewById<TextView>(R.id.tag_text).text = text
+        tag.findViewById<TextView>(R.id.tag_time).text = String.format("%02d:%02d", mins, secs)
+        tagInModal.findViewById<TextView>(R.id.tag_text).text = text
+        tagInModal.findViewById<TextView>(R.id.tag_time).text = String.format("%02d:%02d", mins, secs)
+
+        // Add tag to view
+        loadedTagsLL.addView(tag)
+
+        // Add on click func
+        tag.findViewById<TextView>(R.id.tag_text).setOnClickListener {
+            MaterialDialog(this).show {
+                customView(R.layout.video_editor_tag_modal, tagInModal, scrollable = true, horizontalPadding = true)
+                title(text = "Confirm choice")
+                message(text = "Are you sure you want to remove the following tag?")
+                positiveButton(text = "Confirm") {
+                    // Remove tag from the layout
+                    loadedTagsLL.removeView(tag)
+
+                    // Remove tag from the database
+                    val imageRef = storage.reference.child("${auth.uid.toString()}/videos/${videoFolder}/frame_${time}.jpeg")
+                    imageRef.delete().addOnSuccessListener { Toast.makeText(this@VideoEditorActivity, "Tag deleted successfully!", Toast.LENGTH_SHORT).show() }
+                        .addOnFailureListener{ Toast.makeText(this@VideoEditorActivity, "There was an error deleting the tag, please try again later.", Toast.LENGTH_SHORT).show() }
+                }
+            }
+        }
+    }
+
+    private fun uploadFrameToFirestore() {
+        // File metadata
+        val metadata = storageMetadata {
+            setCustomMetadata("time_int", videoLastPos.toString())
+            setCustomMetadata("tag", selectedTag)
+        }
+
+        // File path
+        val frameRef = storage.reference.child("${auth.uid.toString()}/videos/${videoFolder}/frame_$videoLastPos.jpeg")
+        val baos = ByteArrayOutputStream()
+
+        // Get view
+        val bmp: Bitmap = Bitmap.createBitmap(veDrawView.width, veDrawView.height, Bitmap.Config.ARGB_8888)
+        val canvas: Canvas = Canvas(bmp)
+        veDrawView.draw(canvas)
+        selectedFrame = bmp
+
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        val uploadTask = frameRef.putBytes(data, metadata)
+        uploadTask.addOnFailureListener {
+            // Handle unsuccessful uploads
+            Toast.makeText(this, "Something went wrong while uploading image, please try again later.", Toast.LENGTH_SHORT).show()
+        }.addOnSuccessListener { taskSnapshot ->
+            Toast.makeText(this@VideoEditorActivity, "Uploaded successfully!", Toast.LENGTH_SHORT).show()
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+            // ...
+        }
     }
 
     fun changeToFrameEditing(flag: Boolean) {
@@ -554,9 +698,8 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
         // Download video
         findViewById<TextView>(R.id.video_editor_modal_load).setOnClickListener {
-            initVideo("", Uri.parse("/storage/emulated/0/Android/data/com.example.spor_tfg/files/TrimmedVideo/trimmed_video_2022_3_12_12_17_48..mp4"))
-            // initVideo("", Uri.parse("C://Users//rinig//Desktop//Spor%20TFG//madrid_psg.mp4"))
-            // loadVideo()
+            // initVideo("", Uri.parse("/storage/emulated/0/Android/data/com.example.spor_tfg/files/TrimmedVideo/trimmed_video_2022_3_18_16_56_3..mp4"))
+            loadVideo()
         }
 
     }
@@ -577,7 +720,11 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 text = "Please select the video you wish to edit: "
             )
             listItemsSingleChoice(items = myItems) { dialog, index, text ->
+                // Set path to the video frames
+                println("Video path:: $text")
                 initVideo(text.toString())
+                videoFolder = text.toString().split(".")[0]
+                loadTags()
             }
             positiveButton(text = "Confirm")
         }
