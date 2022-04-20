@@ -265,11 +265,10 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         val framesRef = storage.reference.child("${auth.uid.toString()}/videos/${videoFolder}/")
         // Obtain list of tags
         framesRef.listAll().addOnSuccessListener { listResult ->
-            // Iterate through them and get their metadata to load the tag on the app
-            listResult.items.forEach{ item ->
+            // Iterate through the tags and get their metadata to load the tag on the app
+            listResult.items.forEach { item ->
                 item.metadata.addOnSuccessListener {
-                    addLoadedTag(it.getCustomMetadata("tag")!!, it.getCustomMetadata("time_int")!!.toInt())
-                    // it.name TODO("This is the name of file")
+                    addLoadedTag(it.getCustomMetadata("tag")!!, it.getCustomMetadata("time_int")!!.toInt(), it.name!!)
                 }
             }
         }.addOnFailureListener {
@@ -537,7 +536,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             uploadFrameToFirestore()
 
             // Insert tag into the video layout
-            addLoadedTag(selectedTag, videoLastPos)
+            addLoadedTag(selectedTag, videoLastPos, "frame_$videoLastPos.jpeg")
 
             // Go back and play video where it was last paused
             videoView.seekTo(videoLastPos)
@@ -562,7 +561,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     @SuppressLint("InflateParams")
-    private fun addLoadedTag(text: String, time: Int) {
+    private fun addLoadedTag(text: String, time: Int, fileName: String) {
         // Set minutes and seconds from int position
         val mins: Int = (time / 1000) / 60
         val secs: Int = (time / 1000 ) % 60
@@ -570,20 +569,30 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         // Set tag info (time + text)
         val tag: View = layoutInflater.inflate(R.layout.video_editor_tag, null)
         val tagInModal: View = layoutInflater.inflate(R.layout.video_editor_tag, null)
+        // Get time textviews
+        val tagTime: TextView = tag.findViewById(R.id.tag_time)
+        val tagModalTime: TextView = tagInModal.findViewById(R.id.tag_time)
+
         tag.findViewById<TextView>(R.id.tag_text).text = text
-        tag.findViewById<TextView>(R.id.tag_time).text = String.format("%02d:%02d", mins, secs)
+        tagTime.paintFlags = tagTime.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        tagTime.text = String.format("%02d:%02d", mins, secs)
+        tag.findViewById<TextView>(R.id.tag_name).text = fileName
+
         tagInModal.findViewById<TextView>(R.id.tag_text).text = text
-        tagInModal.findViewById<TextView>(R.id.tag_time).text = String.format("%02d:%02d", mins, secs)
+        // Set text underline
+        tagModalTime.paintFlags = tagModalTime.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        tagModalTime.text = String.format("%02d:%02d", mins, secs)
+        // tagInModal.setBackgroundColor(ContextCompat.getColor(this, R.color.primaryRed))
 
         // Add tag to view
         loadedTagsLL.addView(tag)
 
-        // Add on click func
+        // Add text on click func
         tag.findViewById<TextView>(R.id.tag_text).setOnClickListener {
             MaterialDialog(this).show {
-                customView(R.layout.video_editor_tag_modal, tagInModal, scrollable = true, horizontalPadding = true)
                 title(text = "Confirm choice")
                 message(text = "Are you sure you want to remove the following tag?")
+                customView(R.layout.video_editor_tag_modal, tagInModal, scrollable = true, horizontalPadding = true)
                 positiveButton(text = "Confirm") {
                     // Remove tag from the layout
                     loadedTagsLL.removeView(tag)
@@ -594,6 +603,14 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                         .addOnFailureListener{ Toast.makeText(this@VideoEditorActivity, "There was an error deleting the tag, please try again later.", Toast.LENGTH_SHORT).show() }
                 }
             }
+        }
+
+        // Add time on click func
+        tag.findViewById<TextView>(R.id.tag_time).setOnClickListener {
+            // Change to frame editing window
+
+            // Set image bitmap
+
         }
     }
 

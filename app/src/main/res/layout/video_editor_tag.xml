@@ -33,4 +33,9 @@
             android:textAlignment="viewEnd"
             android:textSize="24sp"
             tools:ignore="RtlSymmetry" />
+        <TextView
+            android:id="@+id/tag_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 </LinearLayout>
