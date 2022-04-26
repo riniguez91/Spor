@@ -17,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Spor_TFG">
         <activity
+            android:name=".HomeScreenActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
+        <activity
             android:name=".VideoEditorActivity"
             android:exported="true"
             android:theme="@style/Theme.Spor_TFG.NoActionBar" />
@@ -36,7 +40,6 @@
             android:theme="@style/Theme.Spor_TFG.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -57,9 +60,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Spor_TFG.NoActionBar">
-        </activity>
-
+            android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

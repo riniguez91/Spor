@@ -134,7 +134,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainPage() {
-        val intent: Intent = Intent(this, PaintActivity::class.java)
+        val intent: Intent = Intent(this, HomeScreenActivity::class.java)
         startActivity(intent)
         finish()
     }

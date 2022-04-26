@@ -22,529 +22,159 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="65dp"
-        android:orientation="vertical">
+        android:layout_marginTop="65dp">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profile_coach_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="350dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="60dp"
-            android:adjustViewBounds="true"
-            android:maxHeight="350dp"
-            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-            tools:srcCompat="@drawable/ancelotti" />
-
-        <TextView
-            android:id="@+id/profile_welcome_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:fontFamily="@font/nexa_bold"
-            android:text="Welcome, Coach"
-            android:textColor="@color/white"
-            android:textSize="40sp" />
-
-        <TextView
-            android:id="@+id/profile_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/nexa_light"
-            android:text="Username"
-            android:textColor="@color/white"
-            android:textSize="26sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/nexa_light"
-            android:text="@string/profile_header"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="45dp"
-            android:textColor="@color/white"
-            android:textSize="26sp"/>
-
-        <ScrollView
+        <LinearLayout
+            android:id="@+id/profile_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="30dp">
+            android:orientation="vertical"
+            >
 
-            <GridLayout
-                android:id="@+id/profile_players_grid_layout"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/profile_confirm_session"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                android:layout_marginTop="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:columnCount="3"
-                android:orientation="horizontal"
-                android:verticalSpacing="100dp"
-                >
-                <!--<com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card"
-                    android:layout_marginRight="40dp"
-                    app:cardBackgroundColor="@color/secondaryRed"
+                android:background="@drawable/roundstyle"
+                android:enabled="true"
+                android:padding="12dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/nexa_bold"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:text="Confirm Session"
+                app:backgroundTint="@color/colorAccent"
+                style="?android:attr/buttonBarButtonStyle" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profile_coach_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="350dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="60dp"
+                android:adjustViewBounds="true"
+                android:maxHeight="350dp"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                tools:srcCompat="@drawable/ancelotti" />
+
+            <TextView
+                android:id="@+id/profile_welcome_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/nexa_bold"
+                android:text="Welcome, Coach"
+                android:textColor="@color/white"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/profile_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/nexa_light"
+                android:text="Username"
+                android:textColor="@color/white"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/profile_selected_players_title"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nexa_light"
+                android:text="Selected Players"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="45dp"
+                android:textColor="@color/white"
+                android:textSize="30sp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="40dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="40dp"
+                android:layout_marginEnd="30dp">
+
+                <GridLayout
+                    android:visibility="gone"
+                    android:id="@+id/profile_selected_players_grid_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
+                    android:rowCount="1"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:horizontalSpacing="30dp">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/profile_selected_players_text"
                         android:layout_height="wrap_content"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
-                        android:orientation="vertical">
+                        android:layout_width="wrap_content"
+                        android:text="No selected players yet..."
+                        android:textColor="@color/white"
+                        android:textSize="30sp"
+                        android:fontFamily="@font/nexa_light"/>
 
-                        &lt;!&ndash; Media &ndash;&gt;
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="194dp"
-                            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                            tools:srcCompat="@tools:sample/avatars"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="Image view"
-                            />
+                    <!--<ImageButton
+                        android:layout_height="170dp"
+                        android:layout_width="170dp"
+                        tools:src="@tools:sample/avatars"/>-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="16dp">
+                </GridLayout>
 
-                            &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Sergio Ramos"
-                                android:fontFamily="@font/nexa_bold"
-                                android:textAppearance="?attr/textAppearanceHeadline6"
-                                />
+            </HorizontalScrollView>
 
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:orientation="horizontal">
+            <!-- <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nexa_light"
+                android:text="@string/profile_header"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="45dp"
+                android:textColor="@color/white"
+                android:textSize="26sp"/>
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:layout_marginRight="3dp"
-                                    android:text="@string/profile_position_string"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="DEF"
-                                    android:layout_marginTop="8dp"
-                                    />
-                            </LinearLayout>
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:layout_marginRight="3dp"
-                                    android:text="@string/profile_jersey_no_text"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="4"
-                                    android:layout_marginTop="8dp"
-                                    />
-                            </LinearLayout>
-
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card"
+                <GridLayout
+                    android:id="@+id/profile_players_grid_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="40dp"
-                    android:layout_margin="8dp">
+                    android:rowCount="1"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:verticalSpacing="100dp">
 
-                    <LinearLayout
+                    <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
-                        android:orientation="vertical">
+                        android:src="@drawable/ic_baseline_add_24"/>
 
-                        &lt;!&ndash; Media &ndash;&gt;
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="194dp"
-                            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                            tools:srcCompat="@tools:sample/avatars"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/content_description_media"
-                            />
+                </GridLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
+            </HorizontalScrollView>-->
 
-                            &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title"
-                                android:textAppearance="?attr/textAppearanceHeadline6"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/secondary_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:text="@string/supporting_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
+        </LinearLayout>
 
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
-                        android:orientation="vertical">
-
-                        &lt;!&ndash; Media &ndash;&gt;
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="194dp"
-                            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                            tools:srcCompat="@tools:sample/avatars"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/content_description_media"
-                            />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title"
-                                android:textAppearance="?attr/textAppearanceHeadline6"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/secondary_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:text="@string/supporting_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
-                        android:orientation="vertical">
-
-                        &lt;!&ndash; Media &ndash;&gt;
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="194dp"
-                            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                            tools:srcCompat="@tools:sample/avatars"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/content_description_media"
-                            />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title"
-                                android:textAppearance="?attr/textAppearanceHeadline6"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/secondary_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:text="@string/supporting_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
-                        android:orientation="vertical">
-
-                        &lt;!&ndash; Media &ndash;&gt;
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="194dp"
-                            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                            tools:srcCompat="@tools:sample/avatars"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/content_description_media"
-                            />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title"
-                                android:textAppearance="?attr/textAppearanceHeadline6"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/secondary_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:text="@string/supporting_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
-                        android:orientation="vertical">
-
-                        &lt;!&ndash; Media &ndash;&gt;
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="194dp"
-                            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                            tools:srcCompat="@tools:sample/avatars"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/content_description_media"
-                            />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title"
-                                android:textAppearance="?attr/textAppearanceHeadline6"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/secondary_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:text="@string/supporting_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
-                        android:orientation="vertical">
-
-                        &lt;!&ndash; Media &ndash;&gt;
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="194dp"
-                            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                            tools:srcCompat="@tools:sample/avatars"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/content_description_media"
-                            />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title"
-                                android:textAppearance="?attr/textAppearanceHeadline6"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/secondary_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:text="@string/supporting_text"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>-->
-
-            </GridLayout>
-
-        </ScrollView>
-
-    </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/profile_navigation_view"

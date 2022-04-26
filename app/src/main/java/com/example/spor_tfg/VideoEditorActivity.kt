@@ -22,6 +22,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.afollestad.materialdialogs.DialogBehavior
@@ -440,7 +441,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             customView(R.layout.video_editor_tag_modal, modalView, scrollable = true, horizontalPadding = true)
             positiveButton(text = "Confirm") { dialog ->
                 // Allow user to optionally edit frame by adding spotlights, arrows etc.
-                editFrame()
+                editFrame(false)
 
                 // Resume video
                 videoView.start()
@@ -449,14 +450,26 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         }
     }
 
-    private fun editFrame() {
+    private fun editFrame(fromLoadedTag: Boolean, fileName: String = "") {
         changeToFrameEditing(true)
         // Create bitmap from
-        println("Video last pos: $videoLastPos")
-        bmFrame = mediaMetadataRetriever.getFrameAtTime((videoLastPos * 1000).toLong(), MediaMetadataRetriever.OPTION_CLOSEST)!!
+        if (fromLoadedTag) {
+            val imageRef = storage.getReferenceFromUrl("gs://spor-tfg.appspot.com/${auth.uid.toString()}/videos/${videoFolder}/${fileName}")
+            imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {
+                // Decode ByteArray so we can convert it to an image
+                val bm = BitmapFactory.decodeByteArray(it, 0, it.size)
+                veDrawView.background = BitmapDrawable(resources, Bitmap.createBitmap(bm))
+            }.addOnFailureListener {
+                Log.e("Error downloading image", it.message!!)
+            }
+        }
+        else {
+            bmFrame = mediaMetadataRetriever.getFrameAtTime((videoLastPos * 1000).toLong(), MediaMetadataRetriever.OPTION_CLOSEST)!!
+            veDrawView.background = BitmapDrawable(resources, bmFrame)
+        }
+
         mainRL.setBackgroundColor(ContextCompat.getColor(this, R.color.primaryDark))
 
-        veDrawView.background = BitmapDrawable(resources, bmFrame)
         veDrawView.setOnDragListener { v, e ->
 
             // Image being dragged
@@ -608,9 +621,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         // Add time on click func
         tag.findViewById<TextView>(R.id.tag_time).setOnClickListener {
             // Change to frame editing window
-
-            // Set image bitmap
-
+            editFrame(true, fileName)
         }
     }
 

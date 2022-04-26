@@ -123,6 +123,9 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Preselect home element
         preselectToolbar()
 
+        // Get team info
+        doc =  (this.application as MyApp).getDocVar()
+
         // Load player image buttons array to insert into the view
         loadPlayers()
 
@@ -391,37 +394,17 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun loadPlayers() {
-        val playersRef = db.collection("user").document(auth.uid.toString())
-        Log.d("UID", "User ID: ${auth.uid.toString()}")
-        playersRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    // Cast and ignore linter warnings
-                    @Suppress("UNCHECKED_CAST")
-                    doc = document.data as HashMap<Any, Any>
+        // Cast and ignore linter warnings
+        @Suppress("UNCHECKED_CAST")
+        team = doc["team"] as HashMap<Any, Any>
 
-                    // Store doc as a global variable for all classes
-                    (this.application as MyApp).setDocVar(doc)
-
-                    // Cast and ignore linter warnings
-                    @Suppress("UNCHECKED_CAST")
-                    team = document.data?.get("team") as HashMap<Any, Any>
-
-                    for ((idx, player) in team) {
-                        @Suppress("UNCHECKED_CAST")
-                        player as HashMap<Any, Any>
-                        if (player["status"] == "available" || player["status"] == "partially available") {
-                            downloadImage(player["image"]  as String, idx.toString().toInt())
-                        }
-                    }
-
-                } else {
-                    Log.d("NoDocument", "No such document")
-                }
+        for ((idx, player) in team) {
+            @Suppress("UNCHECKED_CAST")
+            player as HashMap<Any, Any>
+            if (player["status"] == "available" || player["status"] == "partially available") {
+                downloadImage(player["image"]  as String, idx.toString().toInt())
             }
-            .addOnFailureListener { exception ->
-                Log.d("Failure", "get failed with ", exception)
-            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -461,8 +444,9 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             println("Team: $team")
             @Suppress("UNCHECKED_CAST")
             // Cast to HashMap else we can not iterate through each player key
-            val player = team[imageButton.id] as HashMap<Any, Any>?
-            println(player)
+            val player: HashMap<*, *>? = team[imageButton.id] as HashMap<*, *>?
+            println("Player: ${team[imageButton.id]}")
+
             // Construct dialog
             val dialogBuilder = AlertDialog.Builder(this)
             val playerModalView: View = layoutInflater.inflate(R.layout.player_modal, null)

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Add Player"
+        android:textColor="@color/white"
+        android:background="@color/secondaryRed"
+        android:fontFamily="@font/nexa_light"
+        android:textSize="40sp"
+        android:padding="30dp"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/player_signin_name_ilayout"
+        android:layout_width="match_parent"
+        app:endIconMode="clear_text"
+        android:layout_height="wrap_content"
+        android:hint="Change name"
+        android:textColorHint="@color/black">
+        <com.google.android.material.textfield.TextInputEditText
+            android:gravity="center"
+            android:id="@+id/player_signin_name_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/nexa_light"
+            android:background="@android:color/transparent"
+            android:text="Rapahel Varane"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/player_signin_pos_ilayout"
+        android:layout_width="match_parent"
+        app:endIconMode="clear_text"
+        android:textColorHint="@color/black"
+        android:layout_height="wrap_content"
+        android:hint="Change position">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/player_signin_pos_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:fontFamily="@font/nexa_light"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"
+            android:text="DEF"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/player_signin_jersey_no_ilayout"
+        android:layout_width="match_parent"
+        app:endIconMode="clear_text"
+        android:layout_height="wrap_content"
+    android:textColorHint="@color/black"
+        android:hint="Change Jersey No.">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/player_signin_jersey_no_field"
+            android:fontFamily="@font/nexa_light"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"
+            android:text="4"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/player_signin_leading_foot_ilayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:textColorHint="@color/black"
+        android:layout_height="wrap_content"
+        android:hint="Change Leading Foot">
+        <AutoCompleteTextView
+            android:gravity="center"
+            android:fontFamily="@font/nexa_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:textColor="@color/black"
+            tools:ignore="LabelFor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
