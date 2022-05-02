@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,9 +9,14 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
         app:cardBackgroundColor="@color/secondaryRed"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
+        app:strokeColor="@color/black"
+        app:strokeWidth="3dp">
 
         <LinearLayout
             android:gravity="center"
@@ -27,9 +32,11 @@
 
                 <!-- Title, secondary and supporting text -->
                 <TextView
+                    android:id="@+id/plays_card_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Zonas con ataque en superioridad"
+                    android:fontFamily="@font/nexa_bold"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     />
 
@@ -41,47 +48,53 @@
                     android:background="@color/primaryDark"/>
 
                 <TextView
+                    android:id="@+id/plays_card_objective"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/nexa_light"
                     android:text="@string/bold_objective"
                     android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="@color/black"
                     />
 
                 <!-- Media -->
                 <ImageView
+                    android:visibility="invisible"
+                    android:id="@+id/plays_card_thumbnail"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="400dp"
                     android:layout_marginTop="10dp"
                     android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
-                    tools:src="@tools:sample/avatars"
+                    android:src="@drawable/logo"
+                    android:maxHeight="400dp"
                     android:contentDescription="@string/todo"
                     />
+
+                <!--tools:src="@tools:sample/avatars"-->
 
             </LinearLayout>
 
             <!-- Buttons -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:orientation="horizontal">
-                <com.google.android.material.button.MaterialButton
+                <ImageView
+                    android:id="@+id/plays_card_paint_activity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/todo"
-                    style="?attr/borderlessButtonStyle"
-                    />
-                <com.google.android.material.button.MaterialButton
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_brush_24"/>
+                <ImageView
+                    android:id="@+id/plays_card_veditor_activity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/todo"
-                    style="?attr/borderlessButtonStyle"
-                    />
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_video_settings_24"/>
             </LinearLayout>
 
             <!-- Horizontal divider -->
@@ -93,28 +106,40 @@
                 android:background="@color/primaryDark"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:orientation="horizontal">
-                <com.google.android.material.button.MaterialButton
+                <ImageView
+                    android:id="@+id/plays_card_saved_screenshots"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/todo"
-                    style="?attr/borderlessButtonStyle"
-                    />
-                <com.google.android.material.button.MaterialButton
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_image_24"/>
+                <ImageView
+                    android:id="@+id/plays_card_saved_anim"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/todo"
-                    style="?attr/borderlessButtonStyle"
-                    />
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_animation_24"/>
+
+                <ImageView
+                    android:id="@+id/plays_card_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_edit_24"/>
+
+                <ImageView
+                    android:id="@+id/plays_card_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_delete_24"/>
             </LinearLayout>
 
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-</RelativeLayout>
+</LinearLayout>

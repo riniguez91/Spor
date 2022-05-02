@@ -82,7 +82,9 @@ class HomeScreenActivity : AppCompatActivity() {
 
     private fun loadTrainingSessionFunc() {
         loadSession.setOnClickListener {
-
+            val intent = Intent(this, MainScreen::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -115,13 +117,14 @@ class HomeScreenActivity : AppCompatActivity() {
         managePlayers.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
-            finish()
         }
     }
 
     private fun trainingSessionsFunc() {
         trainingSessions.setOnClickListener {
-            changeVisibleOptions(sessionsFlag)
+            val intent = Intent(this, MainScreen::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 

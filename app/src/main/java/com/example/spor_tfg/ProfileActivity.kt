@@ -17,7 +17,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.view.marginEnd
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
@@ -36,7 +35,12 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
+import java.io.ObjectOutputStream
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -81,7 +85,6 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     // Players layout
     lateinit var doc: HashMap<Any, Any>
-    lateinit var editPlayerButton: ImageButton
     lateinit var cardLayout: LinearLayout
 
     // Selected players
@@ -130,7 +133,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         addSessionFlag = intent.getBooleanExtra("addSessionFlag", false)
 
         // Get team info
-        myApp = this.application as MyApp
+        myApp = (this.application as MyApp)
         doc =  myApp.getDocVar()
 
         // Load coach data
@@ -147,10 +150,17 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private fun addSession() {
         selectedPlayersGridLayout.visibility = View.VISIBLE
         MaterialDialog(this).show {
+            // Set standard session name
+            val calendar: Calendar = Calendar.getInstance()
+            sessionName = "session_${calendar.get(Calendar.HOUR_OF_DAY)}${calendar.get(Calendar.MINUTE)}${calendar.get(Calendar.SECOND)}"
+
+            // Force user to click confirm button in order the modal closes
             this.cancelOnTouchOutside(false)
+
+            // Fill in dialog
             title(text = "Session name")
             message(text = "Please type session name:")
-            input(allowEmpty = false) { dialog, text ->
+            input(prefill = sessionName, allowEmpty = false) { dialog, text ->
                 // Text submitted with the action button
                 sessionName = text.toString()
             }
@@ -188,6 +198,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     @Suppress("UNCHECKED_CAST")
     private fun loadPlayers() {
         val totalTeams = doc["total_teams"] as HashMap<Any, Any>
+        println("Total teams:: $totalTeams")
         for ((idx, team) in totalTeams) {
             // Set variable types
             idx as String
@@ -284,7 +295,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         // Buttons
         val playerStatus: ImageButton = cardLayout.findViewById<ImageButton>(R.id.profile_player_card_status)
-        editPlayerButton = cardLayout.findViewById(R.id.profile_player_card_edit)
+        val editPlayerButton: ImageButton = cardLayout.findViewById(R.id.profile_player_card_edit)
         val cancelCardEdit = cardLayout.findViewById<ImageButton>(R.id.profile_player_card_edit_cancel)
         val confirmCardEdit = cardLayout.findViewById<ImageButton>(R.id.profile_player_card_edit_confirm)
         val deleteCardEdit = cardLayout.findViewById<ImageButton>(R.id.profile_player_card_edit_delete)
@@ -330,6 +341,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             selectedPlayersText.visibility = View.GONE
             // Hide button since it has already been added to the view
             addPlayer.visibility = View.GONE
+            editPlayerButton.visibility = View.GONE
             confirmSessionButton.visibility = View.VISIBLE
 
             // Add players onto the horizontal scroll view
@@ -350,6 +362,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 (sPlayerIB.parent as ViewGroup).removeView(sPlayerIB)
                 selectedPlayersHM.remove(id.toString())
                 addPlayer.visibility = View.VISIBLE
+                editPlayerButton.visibility = View.VISIBLE
                 if (selectedPlayersGridLayout.childCount == 1) {
                     selectedPlayersText.visibility = View.VISIBLE
                     confirmSessionButton.visibility = View.GONE
@@ -364,17 +377,37 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 .build()
         }
 
+        @Suppress("UNCHECKED_CAST")
+        fun uploadHashMapToFirestore(value: HashMap<Any, Any>, path: String): UploadTask {
+            // Upload bytes to firestore
+            val byteOut = ByteArrayOutputStream()
+            val out = ObjectOutputStream(byteOut)
+            out.writeObject(value)
+
+            return storage.reference.child(path).putBytes(byteOut.toByteArray())
+        }
+
         // Confirm session click func
         @Suppress("UNCHECKED_CAST")
         confirmSessionButton.setOnClickListener {
             // Set players in training session
-            doc["team"]  = selectedPlayersHM
-            println(selectedPlayersHM)
+            doc["team"] = selectedPlayersHM
+            uploadHashMapToFirestore(selectedPlayersHM, "${auth.uid.toString()}/plays/${sessionName}/selected_team")
 
-            // Redirect user to paint
-            val intent = Intent(this, PaintActivity::class.java)
-            startActivity(intent)
-            finish()
+            // Get session info hashmap
+            val playInfoHM: HashMap<String, String> = intent.getSerializableExtra("playInfoHM") as HashMap<String, String>
+
+            val ref: UploadTask = uploadHashMapToFirestore(playInfoHM as HashMap<Any, Any>, "${auth.uid.toString()}/plays/${sessionName}/${sessionName}")
+            ref.addOnSuccessListener {
+                Toast.makeText(this, "Session created successfully!", Toast.LENGTH_SHORT).show()
+                // Redirect user to paint
+                val intent = Intent(this, MainScreen::class.java)
+                intent.putExtra("session_name", sessionName)
+                startActivity(intent)
+                finish()
+            }.addOnFailureListener {
+                Toast.makeText(this, "There was an error creating the play, please try again.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Status click func
@@ -519,7 +552,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             // Leading foot
             cardLeadingFoot.visibility = View.GONE
             cardLeadingFootLayout.visibility = View.VISIBLE
-            if (addSessionFlag) addPlayer.visibility = View.VISIBLE
+            if (addSessionFlag) addPlayer.visibility = View.GONE
         }
         // Set card viewing elements
         else {
@@ -544,7 +577,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             // Leading foot
             cardLeadingFoot.visibility = View.VISIBLE
             cardLeadingFootLayout.visibility = View.GONE
-            if (addSessionFlag) addPlayer.visibility = View.GONE
+            if (addSessionFlag) addPlayer.visibility = View.VISIBLE
         }
     }
 
@@ -661,19 +694,13 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.nav_whiteboard -> {
-                val intent = Intent(this, PaintActivity::class.java)
+            R.id.nav_home -> {
+                val intent = Intent(this, MainScreen::class.java)
                 startActivity(intent)
                 finish()
                 true
             }
             R.id.nav_profile -> {
-                true
-            }
-            R.id.nav_video_editor -> {
-                val intent = Intent(this, VideoEditorActivity::class.java)
-                startActivity(intent)
-                finish()
                 true
             }
             else -> true

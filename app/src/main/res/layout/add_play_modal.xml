@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Play information"
+        android:textColor="@color/white"
+        android:background="@color/secondaryRed"
+        android:fontFamily="@font/nexa_light"
+        android:textSize="40sp"
+        android:padding="30dp"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/add_play_modal_name_ilayout"
+        android:layout_width="match_parent"
+        app:endIconMode="clear_text"
+        android:layout_height="wrap_content"
+        android:hint="Play name"
+        android:textColorHint="@color/black">
+        <com.google.android.material.textfield.TextInputEditText
+            android:gravity="center"
+            android:id="@+id/add_play_name_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/nexa_light"
+            android:background="@android:color/transparent"
+            android:text="Introduce text..."/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/add_play_modal_objective_ilayout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        app:endIconMode="clear_text"
+        android:layout_height="wrap_content"
+        android:hint="Objective"
+        android:textColorHint="@color/black">
+        <com.google.android.material.textfield.TextInputEditText
+            android:gravity="center"
+            android:id="@+id/add_play_modal_objective"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/nexa_light"
+            android:background="@android:color/transparent"
+            android:text="Introduce text..."/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

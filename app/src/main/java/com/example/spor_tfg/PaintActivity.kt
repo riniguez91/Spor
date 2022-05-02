@@ -5,10 +5,10 @@ import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.*
 import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.DragEvent
 import android.view.MenuItem
@@ -17,12 +17,13 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
+import com.afollestad.materialdialogs.MaterialDialog
 import com.example.spor_tfg.databinding.ActivityPaintBinding
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
@@ -33,17 +34,22 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import com.google.gson.Gson
 import petrov.kristiyan.colorpicker.ColorPicker
 import petrov.kristiyan.colorpicker.ColorPicker.OnFastChooseColorListener
-import java.io.OutputStream
-import kotlin.reflect.typeOf
+import java.io.ByteArrayOutputStream
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
-class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemSelectedListener
 
     private lateinit var binding: ActivityPaintBinding
     private var auth: FirebaseAuth = Firebase.auth
     private var storage: FirebaseStorage = Firebase.storage
+
+    lateinit var myApp: MyApp
 
     // in order to get the reference of the View
     lateinit var paint: DrawView
@@ -51,7 +57,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     lateinit var navigationView: NavigationView
 
     // creating objects of type button
-    lateinit var save: ShapeableImageView
+    lateinit var savePlay: ShapeableImageView
     lateinit var color: ShapeableImageView
     lateinit var undo: ShapeableImageView
     lateinit var bin: ShapeableImageView
@@ -61,6 +67,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     lateinit var done: ShapeableImageView
     lateinit var animationColorButton: ShapeableImageView
     lateinit var playAnim: ShapeableImageView
+    lateinit var saveAnim: ShapeableImageView
 
     private var trainingEquipmentFlag: Boolean = false
     lateinit var cone: ShapeableImageView
@@ -75,10 +82,17 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private var singleAnimFlag: Boolean = false
     private var multiAnimFlag: Boolean = false
     private lateinit var animPath: Path
+    // animationPaths[frame] = framePaths
     private var animationPaths: HashMap<Int, HashMap<Int, Path>> = HashMap<Int, HashMap<Int, Path>>()
     private var framePaths: HashMap<Int, Path> = HashMap()
     private var frameNo: Int = 1
     private var animationColor: Int = Color.WHITE
+
+    // Points to be serialized into the database
+    private var points: HashMap<Int, HashMap<Int, ArrayList<Pair<Float, Float>>>> = HashMap()
+
+    var queryCount: Int = 0
+    var teamSize: Int = 0
 
     // Color array
     val colors: ArrayList<String> = ArrayList()
@@ -98,7 +112,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         paint = findViewById(R.id.draw_view)
         paint.background = ContextCompat.getDrawable(this@PaintActivity, R.drawable.football_field_horizontal)
         undo = findViewById<View>(R.id.btn_undo) as ShapeableImageView
-        save = findViewById<View>(R.id.btn_save) as ShapeableImageView
+        savePlay = findViewById<View>(R.id.btn_save_play) as ShapeableImageView
         color = findViewById<View>(R.id.btn_color) as ShapeableImageView
         bin = findViewById<View>(R.id.btn_bin) as ShapeableImageView
 
@@ -107,6 +121,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         done = findViewById<View>(R.id.btn_multi_anim_done) as ShapeableImageView
         animationColorButton = findViewById<View>(R.id.btn_animation_color) as ShapeableImageView
         playAnim = findViewById<View>(R.id.btn_play_anim) as ShapeableImageView
+        saveAnim = findViewById<View>(R.id.btn_save_anim) as ShapeableImageView
 
         cone = findViewById<View>(R.id.btn_training_cone) as ShapeableImageView
         football = findViewById<View>(R.id.btn_football) as ShapeableImageView
@@ -118,13 +133,14 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         // Integrate toolbar menu functionality
         initToolbar()
-        navigationView.setNavigationItemSelectedListener(this@PaintActivity)
+        // navigationView.setNavigationItemSelectedListener(this@PaintActivity)
 
         // Preselect home element
-        preselectToolbar()
+        // preselectToolbar()
 
         // Get team info
-        doc =  (this.application as MyApp).getDocVar()
+        myApp = this.application as MyApp
+        doc = myApp.getDocVar()
 
         // Load player image buttons array to insert into the view
         loadPlayers()
@@ -141,39 +157,47 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         // Add save button functionality
         // Saves current canvas to storage as a PNG
-        save.setOnClickListener {
-            val bmp = paint.save()
-            val canvas = Canvas(bmp!!)
-            paint.draw(canvas)
+        savePlay.setOnClickListener {
+            val dialog = MaterialDialog(this).show {
+                title(text = "Confirm action")
+                message(text = "Are you sure you want save the following play?")
+                positiveButton(text = "Confirm") { dialog ->
+                    // Play name
+                    val calendar: Calendar = Calendar.getInstance()
+                    val playName =
+                        "play_${calendar.get(Calendar.HOUR_OF_DAY)}${calendar.get(Calendar.MINUTE)}${
+                            calendar.get(Calendar.SECOND)
+                        }"
 
-            // opening a OutputStream to write into the file
-            val imageOutStream: OutputStream?
-            val cv = ContentValues()
+                    // File path
+                    val playRef =
+                        storage.reference.child("${auth.uid.toString()}/plays/${intent.getStringExtra("session_name")}/screenshots/$playName.jpeg")
+                    val baos = ByteArrayOutputStream()
 
-            // name of the file
-            cv.put(MediaStore.Images.Media.DISPLAY_NAME, "drawing.png")
+                    // Get view
+                    val bmp = paint.save()
+                    val canvas = Canvas(bmp!!)
+                    paint.draw(canvas)
 
-            // type of the file
-            cv.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                    val data = baos.toByteArray()
 
-            // location of the file to be saved
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-            }
-
-            // get the Uri of the file which is to be created in the storage
-            val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv)
-            try {
-                // open the output stream with the above uri
-                imageOutStream = contentResolver.openOutputStream(uri!!)
-
-                // this method writes the files in storage
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, imageOutStream)
-
-                // close the output stream after use
-                imageOutStream!!.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
+                    val uploadTask = playRef.putBytes(data) // putBytes(data, metadata)
+                    uploadTask.addOnFailureListener {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(
+                            this@PaintActivity,
+                            "Something went wrong while uploading image, please try again later.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }.addOnSuccessListener { taskSnapshot ->
+                        Toast.makeText(this@PaintActivity, "Uploaded successfully!", Toast.LENGTH_SHORT)
+                            .show()
+                        // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                        // ...
+                    }
+                }
+                negativeButton(android.R.string.cancel)
             }
         }
 
@@ -323,6 +347,45 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
         }
 
+        saveAnim.setOnClickListener {
+            if (animationPaths.isEmpty()) {
+                val dialog = MaterialDialog(this).show {
+                    title(text = "Error")
+                    message(text = "There are no animations to upload, try again by adding some to the canvas!")
+                    positiveButton(text = "Confirm")
+                    negativeButton(text = "Cancel")
+                }
+            }
+            else {
+                val dialog = MaterialDialog(this).show {
+                    title(text = "Confirm action")
+                    message(text = "Are you sure you want save the following animations?")
+                    positiveButton(text = "Confirm") { dialog ->
+                        // File path
+                        val playRef =
+                            storage.reference.child("${auth.uid.toString()}/plays/${intent.getStringExtra("session_name")}/animations")
+
+                        val jsonString: String = Gson().toJson(points, HashMap::class.java)
+                        val uploadTask = playRef.putBytes(jsonString.toByteArray())
+                        uploadTask.addOnFailureListener {
+                            // Handle unsuccessful uploads
+                            Toast.makeText(
+                                this@PaintActivity,
+                                "Something went wrong while uploading the animation/s, please try again later.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }.addOnSuccessListener { taskSnapshot ->
+                            Toast.makeText(this@PaintActivity, "Uploaded successfully!", Toast.LENGTH_SHORT)
+                                .show()
+                            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                            // ...
+                        }
+                    }
+                    negativeButton(android.R.string.cancel)
+                }
+            }
+        }
+
         // pass the height and width of the custom view
         // to the init method of the DrawView object
         // pass the height and width of the custom view
@@ -339,6 +402,66 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         // Allow drag into the canvas
         allowDragIntoCanvas()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getAnimations() {
+        val deserializedPoints = intent.getSerializableExtra("animations") as HashMap<*, *>
+        val listOfIDS: ArrayList<Int> = ArrayList()
+        if (!deserializedPoints.isNullOrEmpty()) {
+            deserializedPoints as HashMap<String, HashMap<String, ArrayList<HashMap<String, Float>>>>
+            // Paint animations on screen
+            deserializedPoints.forEach { (frame, paths) ->
+                // Do something with frame (such as paint it in each animation path)
+                println("Paths:: $paths")
+                playersLinearLayout.children.forEach {
+                    println("Child id is:: ${it.id}")
+                }
+                for ((id, path) in paths) {
+                    val dPath: Path = Path()
+                    path.forEachIndexed { index, pair ->
+                        println("Index of path is:: $id")
+                        // Simulate user draggin with the given coordinates
+                        when (index) {
+                            0 -> dPath.moveTo(pair["first"]!!, pair["second"]!!)
+                            path.lastIndex -> dPath.addCircle(pair["first"]!!, pair["second"]!!, 8f, Path.Direction.CW)
+                            else -> dPath.lineTo(pair["first"]!!, pair["second"]!!)
+                        }
+                    }
+
+                    // Add path and image to paint
+                    val fp = Stroke(animationColor, 3, dPath)
+                    paint.animPaths.add(fp)
+
+                    // Keep track of inserted IDs
+                    if (!listOfIDS.contains(Integer.parseInt(id))) {
+                        // Insert images with animations into the canvas
+                        val image: ImageButton = playersLinearLayout.findViewById(Integer.parseInt(id))
+                        (image.parent as ViewGroup).removeView(image)
+                        paint.addView(image)
+                        // Place starting coordinates
+                        println("Image width:: ${image.width}")
+                        println("Image height:: ${image.height}")
+                        image.x = path[0]["first"]!! - (163 / 2)
+                        image.y = path[0]["second"]!! - (155 / 2)
+                        // Make sure we add it to the list of unique IDs
+                        listOfIDS.add(Integer.parseInt(id))
+                    }
+
+                    // Add paths to animation path so the user can click on the play button and the animation will start
+                    val framePath = animationPaths[Integer.parseInt(frame)]
+                    if (!framePath.isNullOrEmpty()) {
+                        framePath[Integer.parseInt(id)] = dPath
+                    }
+                    else {
+                        animationPaths[Integer.parseInt(frame)] = HashMap<Int, Path>().apply {
+                            this[Integer.parseInt(id)] = dPath
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     private fun deactivateSingleAnim() {
@@ -375,7 +498,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         toolbar.title
         setSupportActionBar(findViewById<View>(R.id.toolbar) as Toolbar)
 
-        drawerLayout = findViewById<View>(R.id.drawer_layout) as DrawerLayout
+        /*drawerLayout = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         val toggle: ActionBarDrawerToggle = ActionBarDrawerToggle(
             this,
             drawerLayout as DrawerLayout?,
@@ -384,7 +507,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.string.navigation_drawer_close
         )
         (drawerLayout as DrawerLayout?)?.addDrawerListener(toggle)
-        toggle.syncState()
+        toggle.syncState()*/
     }
 
     private fun preselectToolbar() {
@@ -402,6 +525,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             @Suppress("UNCHECKED_CAST")
             player as HashMap<Any, Any>
             if (player["status"] == "available" || player["status"] == "partially available") {
+                teamSize++
                 downloadImage(player["image"]  as String, idx.toString().toInt())
             }
         }
@@ -436,6 +560,10 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }.addOnFailureListener {
             // Handle any errors
             Log.d("Download image error", it.toString())
+        }.addOnCompleteListener {
+            queryCount++
+            println("Query count:: $queryCount || Size:: $teamSize")
+            if (queryCount == teamSize) getAnimations()
         }
     }
 
@@ -649,6 +777,21 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     if ((singleAnimFlag || multiAnimFlag) && image.parent == paint) {
                         animPath = Path()
                         animPath.moveTo(e.x, e.y)
+                        // Add to auxiliary serialized hashmap
+                        // Check if there is a hashmap associated to a frame
+                        if (points[frameNo].isNullOrEmpty()) {
+                            points[frameNo] = HashMap<Int, ArrayList<Pair<Float, Float>>>().apply {
+                                this[image.id] = ArrayList<Pair<Float, Float>>().apply{
+                                    this.add(Pair(e.x, e.y))
+                                }
+                            }
+                        }
+                        // No need to create hashmap again
+                        else {
+                            points[frameNo]?.set(image.id, ArrayList<Pair<Float, Float>>().apply{
+                                this.add(Pair(e.x, e.y))
+                            })
+                        }
                         v.invalidate()
                     }
                     true
@@ -661,6 +804,8 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 DragEvent.ACTION_DRAG_LOCATION -> {
                     if (singleAnimFlag || multiAnimFlag) {
                         animPath.lineTo(e.x, e.y)
+                        // Add to auxiliary serialized hashmap
+                        points[frameNo]?.get(image.id)?.add(Pair(e.x, e.y))
                         v.invalidate()
                     }
                     true
@@ -679,6 +824,10 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     if (image.parent == paint) {
                         // Check if its a simple drag & drop
                         if (singleAnimFlag || multiAnimFlag) {
+                            // Add to auxiliary serialized hashmap
+                            // Add to auxiliary serialized hashmap
+                            points[frameNo]?.get(image.id)?.add(Pair(e.x, e.y))
+
                             // TODO("Create animPathClone by value since it is by reference right now")
                             val animPathClone: Path = animPath
                             animPathClone.addCircle(e.x, e.y, 8f, Path.Direction.CW)
@@ -753,7 +902,7 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    /*override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.nav_whiteboard -> {
                 true
@@ -770,6 +919,6 @@ class PaintActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             else -> true
         }
-    }
+    }*/
 }
 

@@ -56,7 +56,7 @@ import java.io.File
 import java.io.FileInputStream
 
 
-class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class VideoEditorActivity : AppCompatActivity() {       // NavigationView.OnNavigationItemSelectedListener
 
     private lateinit var binding: ActivityVideoEditorBinding
 
@@ -132,7 +132,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
         // Navigation hooks
         navigationView = findViewById(R.id.video_editor_navigation_view)
-        navigationView.setNavigationItemSelectedListener(this)
+        // navigationView.setNavigationItemSelectedListener(this)
 
         // Drag & Drop hooks
         btnSpotlight = findViewById(R.id.btn_spotlight)
@@ -173,7 +173,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         initToolbar()
 
         // Preselect
-        preselectToolbar()
+        // preselectToolbar()
 
         // Get team info
         doc =  (this.application as MyApp).getDocVar()
@@ -273,7 +273,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 }
             }
         }.addOnFailureListener {
-
+            Toast.makeText(this@VideoEditorActivity, "There was an error deleting the tag, please try again later.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -764,7 +764,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         toolbar.title
         setSupportActionBar(findViewById<View>(R.id.video_editor_toolbar) as Toolbar)
 
-        drawerLayout = findViewById<View>(R.id.video_editor_drawer_layout) as DrawerLayout
+        /*drawerLayout = findViewById<View>(R.id.video_editor_drawer_layout) as DrawerLayout
         val toggle: ActionBarDrawerToggle = ActionBarDrawerToggle(
             this,
             drawerLayout as DrawerLayout?,
@@ -773,7 +773,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             R.string.navigation_drawer_close
         )
         (drawerLayout as DrawerLayout?)?.addDrawerListener(toggle)
-        toggle.syncState()
+        toggle.syncState()*/
     }
 
     private fun preselectToolbar() {
@@ -781,7 +781,7 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         menuItem.isChecked = true
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    /*override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.nav_whiteboard -> {
                 val intent = Intent(this, PaintActivity::class.java)
@@ -798,5 +798,5 @@ class VideoEditorActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             }
             else -> true
         }
-    }
+    }*/
 }

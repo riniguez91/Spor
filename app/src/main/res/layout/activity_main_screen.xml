@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/mscreen_drawer_layout"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+    <LinearLayout
+        android:id="@+id/profile_home_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/mscreen_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/secondaryRed"
+            android:theme="@style/Theme.Spor_TFG.CustomToolbar"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="65dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MainScreen"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="90dp"
+                android:fontFamily="@font/nexa_bold"
+                android:text="Your Sessions"
+                android:textColor="@color/white"
+                android:textSize="50sp"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dominate the game"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/nexa_light"
+                android:layout_gravity="center"/>
+
+            <GridLayout
+                android:id="@+id/ms_plays_grid_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="1"
+                android:layout_marginTop="50dp"
+                android:verticalSpacing="100dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/mscreen_add_play_button"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_baseline_add_24"
+                    tools:ignore="ContentDescription" />
+
+                <!--<com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card"
+                    app:cardBackgroundColor="@color/secondaryRed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginEnd="50dp">
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
+                            <TextView
+                                android:id="@+id/plays_card_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Zonas con ataque en superioridad"
+                                android:fontFamily="@font/nexa_bold"
+                                android:textAppearance="?attr/textAppearanceHeadline6"
+                                />
+
+                            &lt;!&ndash; Horizontal divider &ndash;&gt;
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@color/primaryDark"/>
+
+                            <TextView
+                                android:id="@+id/plays_card_objective"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:fontFamily="@font/nexa_light"
+                                android:text="@string/bold_objective"
+                                android:textAppearance="?attr/textAppearanceBody2"
+                                android:textColor="@color/black"
+                                />
+
+                            &lt;!&ndash; Media &ndash;&gt;
+                            <ImageView
+                                android:visibility="invisible"
+                                android:id="@+id/plays_card_thumbnail"
+                                android:gravity="center"
+                                android:layout_width="match_parent"
+                                android:layout_height="400dp"
+                                android:layout_marginTop="10dp"
+                                android:scaleType="fitCenter"
+                                android:adjustViewBounds="true"
+                                android:src="@drawable/logo"
+                                android:maxHeight="400dp"
+                                android:contentDescription="@string/todo"
+                                />
+
+                            &lt;!&ndash;tools:src="@tools:sample/avatars"&ndash;&gt;
+
+                        </LinearLayout>
+
+                        &lt;!&ndash; Buttons &ndash;&gt;
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_baseline_brush_24"/>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_baseline_video_settings_24"/>
+                        </LinearLayout>
+
+                        &lt;!&ndash; Horizontal divider &ndash;&gt;
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/primaryDark"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_baseline_brush_24"/>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_baseline_video_settings_24"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>-->
+
+            </GridLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/mscreen_navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/home_navigation_drawer"
+        app:headerLayout="@layout/nav_header">
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>
