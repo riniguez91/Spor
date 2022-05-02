@@ -10,12 +10,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.DialogFragment
+import com.afollestad.materialdialogs.MaterialDialog
 import com.example.spor_tfg.databinding.ActivityMainScreenBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputLayout
@@ -183,14 +185,39 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
     // Edit card
     private fun cardEditClickFunc(cardEditButton: ImageView) {
         cardEditButton.setOnClickListener {
-
+            // TODO("Add functionality to edit play title objective and play")
         }
     }
 
     // Delete card
-    private fun cardDeleteClickFunc(cardDeleteButton: ImageView) {
+    private fun cardDeleteClickFunc(cardDeleteButton: ImageView, currSessionName: String) {
         cardDeleteButton.setOnClickListener {
+            val dialog = MaterialDialog(this).show {
+                title(text = "Confirm action")
+                message(text = "Are you sure you want to delete the following play? This action is irreversible.")
+                positiveButton(text = "Confirm") { dialog ->
+                    val pathRef = storage.reference.child("${auth.uid.toString()}/plays/${currSessionName}")
+                    println(pathRef)
+                    pathRef.listAll().addOnSuccessListener {
+                        it.items.forEach { item ->
+                            item.delete()
+                        }
+                        it.prefixes.forEach { prefix ->
+                            prefix.delete()
+                        }
+                        // Delete from grid (3 or 4 parent)
+                        playsGL.removeView(cardDeleteButton.parent.parent.parent.parent as LinearLayout)
 
+                        // Notify user
+                        Toast.makeText(this@MainScreen, "Play has been deleted successfully!", Toast.LENGTH_SHORT).show()
+                    }.addOnFailureListener {
+                        Toast.makeText(this@MainScreen, "There was en error during the operation, please try again later.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                negativeButton(text = "Cancel") {
+                    it.dismiss()
+                }
+            }
         }
     }
 
@@ -214,7 +241,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         cardSavedScreenshotsClickFunc(cardSavedScreenshotsButton, currSessionName)
         cardSavedAnimClickFunc(cardSavedAnimButton, currSessionName)
         cardEditClickFunc(cardEditButton)
-        cardDeleteClickFunc(cardDeleteButton)
+        cardDeleteClickFunc(cardDeleteButton, currSessionName)
 
         // Get card thumbnail
         val cardImage: ImageView = cardLayout.findViewById<ImageView>(R.id.plays_card_thumbnail)
