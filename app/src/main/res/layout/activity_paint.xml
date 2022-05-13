@@ -202,6 +202,16 @@
                 android:src="@drawable/soccer_goal_net"
                 android:layout_marginEnd="15dp"
                 android:text="@string/bin" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btn_change_field"
+                android:layout_width="41dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/football_field"
+                android:layout_marginEnd="15dp"
+                android:text="@string/bin" />
         </LinearLayout>
 
 

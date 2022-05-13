@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <integer-array name="football_fields">
+        <item>@drawable/football_field_horizontal</item>
+        <item>@drawable/football_field_horizontal_2</item>
+    </integer-array>
+</resources>

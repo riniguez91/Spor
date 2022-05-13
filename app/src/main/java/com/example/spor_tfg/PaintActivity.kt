@@ -4,9 +4,8 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.*
+import android.content.res.TypedArray
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -39,8 +38,6 @@ import petrov.kristiyan.colorpicker.ColorPicker
 import petrov.kristiyan.colorpicker.ColorPicker.OnFastChooseColorListener
 import java.io.ByteArrayOutputStream
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemSelectedListener
@@ -74,6 +71,7 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
     lateinit var football: ShapeableImageView
     lateinit var dummy: ShapeableImageView
     lateinit var goalie: ShapeableImageView
+    lateinit var field: ShapeableImageView
 
     lateinit var playersLinearLayout: LinearLayout
     private val db: FirebaseFirestore = Firebase.firestore
@@ -110,7 +108,7 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
 
         // getting the reference of the views from their ids
         paint = findViewById(R.id.draw_view)
-        paint.background = ContextCompat.getDrawable(this@PaintActivity, R.drawable.football_field_horizontal)
+        paint.background = ContextCompat.getDrawable(this@PaintActivity, R.drawable.football_field_horizontal_2)
         undo = findViewById<View>(R.id.btn_undo) as ShapeableImageView
         savePlay = findViewById<View>(R.id.btn_save_play) as ShapeableImageView
         color = findViewById<View>(R.id.btn_color) as ShapeableImageView
@@ -127,6 +125,7 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
         football = findViewById<View>(R.id.btn_football) as ShapeableImageView
         dummy = findViewById<View>(R.id.btn_dummy) as ShapeableImageView
         goalie = findViewById<View>(R.id.btn_goal_net) as ShapeableImageView
+        field = findViewById<View>(R.id.btn_change_field) as ShapeableImageView
 
         playersLinearLayout = findViewById(R.id.players_ll)
         navigationView = findViewById(R.id.navigation_view)
@@ -169,9 +168,6 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
                             calendar.get(Calendar.SECOND)
                         }"
 
-                    // File path
-                    val playRef =
-                        storage.reference.child("${auth.uid.toString()}/plays/${intent.getStringExtra("session_name")}/screenshots/$playName.jpeg")
                     val baos = ByteArrayOutputStream()
 
                     // Get view
@@ -182,6 +178,9 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
                     bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                     val data = baos.toByteArray()
 
+                    // File path
+                    val playRef =
+                        storage.reference.child("${auth.uid.toString()}/plays/${intent.getStringExtra("session_name")}/screenshots/$playName.jpeg")
                     val uploadTask = playRef.putBytes(data) // putBytes(data, metadata)
                     uploadTask.addOnFailureListener {
                         // Handle unsuccessful uploads
@@ -637,6 +636,17 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
 
         // Goalie drag()
         goalieDrag()
+
+        // Change football field
+        changeFieldClick()
+    }
+
+    private fun changeFieldClick() {
+        // Get the football fields array
+        val fieldsArray: TypedArray = this.resources.obtainTypedArray(R.array.football_fields)
+        field.setOnClickListener {
+            fieldsArray.recycle()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
