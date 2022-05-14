@@ -20,17 +20,15 @@
         android:transitionName="@string/transition_logo"
         app:layout_constraintBottom_toTopOf="@+id/login_heading"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.16"
         app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/login_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="250sp"
         android:fontFamily="@font/nexa_bold"
         android:text="@string/login_header_text"
         android:textColor="@color/white"

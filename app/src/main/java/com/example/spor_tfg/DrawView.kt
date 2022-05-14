@@ -43,7 +43,7 @@ class DrawView: RelativeLayout {
         currentColor = Color.GREEN
 
         // set an initial brush size
-        strokeWidth = 15
+        strokeWidth = 11
 
         // the below methods smoothens
         // the drawings of the user

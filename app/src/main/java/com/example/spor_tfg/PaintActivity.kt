@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.*
-import android.content.res.TypedArray
 import android.graphics.*
 import android.os.Build
 import android.os.Bundle
@@ -571,8 +570,7 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
             println("Team: $team")
             @Suppress("UNCHECKED_CAST")
             // Cast to HashMap else we can not iterate through each player key
-            val player: HashMap<*, *>? = team[imageButton.id] as HashMap<*, *>?
-            println("Player: ${team[imageButton.id]}")
+            val player: HashMap<*, *>? = team[imageButton.id.toString()] as HashMap<*, *>?
 
             // Construct dialog
             val dialogBuilder = AlertDialog.Builder(this)
@@ -590,9 +588,17 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
             popupPos.text = player?.get("position").toString()
             val popupJerseyNo: TextView = playerModalView.findViewById(R.id.popup_jersey_no)
             popupJerseyNo.text = player?.get("jersey_number").toString()
-            val btn: ImageView = playerModalView.findViewById<ImageView>(R.id.popup_close)
-            btn.setOnClickListener {
-                dialog.dismiss()
+
+            // Jersey switch
+            val jerseys: Array<Int> = arrayOf(R.drawable.jersey_1, R.drawable.jersey_2, R.drawable.jersey_3, R.drawable.jersey_4, R.drawable.jersey_5, R.drawable.jersey_6)
+            val jerseyImage: ShapeableImageView = playerModalView.findViewById(R.id.jersey_image)
+            var currJerseyImage: Int = 0
+            jerseyImage.setOnClickListener {
+                currJerseyImage++
+                // Makes sure we never get out of array bounds
+                // Resets it to 0 if that's the case
+                currJerseyImage %= jerseys.size
+                jerseyImage.setImageDrawable(ContextCompat.getDrawable(this@PaintActivity, jerseys[currJerseyImage]))
             }
         }
     }
@@ -643,9 +649,14 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
 
     private fun changeFieldClick() {
         // Get the football fields array
-        val fieldsArray: TypedArray = this.resources.obtainTypedArray(R.array.football_fields)
+        val fieldsArray: Array<Int> = arrayOf(R.drawable.football_field_horizontal_2, R.drawable.football_field_horizontal, R.drawable.football_field_horizontal_3)
+        var currImage: Int = 0
         field.setOnClickListener {
-            fieldsArray.recycle()
+            currImage++
+            // Makes sure we never get out of array bounds
+            // Resets it to 0 if that's the case
+            currImage %= fieldsArray.size
+            paint.background = ContextCompat.getDrawable(this@PaintActivity, fieldsArray[currImage])
         }
     }
 
