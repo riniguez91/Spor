@@ -1,34 +1,36 @@
 package com.example.spor_tfg
 
+import android.app.Activity
 import android.app.ActivityOptions
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Pair
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.example.spor_tfg.databinding.ActivityLoginBinding
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.Query
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
 
     // vars
     private var auth: FirebaseAuth = Firebase.auth
-    private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var binding: ActivityLoginBinding
     val db = Firebase.database("https://spor-tfg-default-rtdb.europe-west1.firebasedatabase.app")
     val myRef = db.getReference("users")
@@ -36,8 +38,17 @@ class LoginActivity : AppCompatActivity() {
     lateinit var password: EditText
     lateinit var login: Button
     lateinit var forgotPasswordLink: Button
-    lateinit var googleLogin: Button
+    lateinit var googleButton: Button
+    lateinit var facebookButton: Button
     lateinit var loading: ProgressBar
+
+    // Google sign-in
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 100
+    private val TAG = "GOOGLE_SIGN_IN_TAG"
+
+    // Facebook sign-in
+    private val callbackManager = CallbackManager.Factory.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,11 +65,9 @@ class LoginActivity : AppCompatActivity() {
         password = binding.password
         login = binding.login
         forgotPasswordLink = findViewById(R.id.login_forgot_password_button)
-        googleLogin = findViewById(R.id.login_google_button)
+        googleButton = findViewById(R.id.login_google_button)
+        facebookButton = findViewById(R.id.login_facebook_button)
         loading = binding.loading
-
-        // Initialize Google sign-in method
-        // createRequest()
 
         // Set screen change from login to signup
         callSignUp.setOnClickListener {
@@ -91,18 +100,107 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Set google button sign in functionality
-        /*google_login.setOnClickListener {
-            signIn()
-        }*/
+        // Configure Google Sign In object
+        val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
+            .requestIdToken("398024589810-dqgl9olbi4ouki1oen23qj9ifs8ta24v.apps.googleusercontent.com")
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
 
+        // Set google button sign in functionality
+        googleSignIn()
+
+        // Facebook sign in functionality
+        facebookSignIn()
+
+        // Check if there is a logged in user
+        checkUser()
     }
 
-    // CHECK THIS DOESN'T WORK PROPERLY
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
+    private fun facebookSignIn() {
+        facebookButton.setOnClickListener {
+            LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
+
+            LoginManager.getInstance().registerCallback(callbackManager,
+            object : FacebookCallback<LoginResult> {
+
+                override fun onSuccess(result: LoginResult) {
+                    result.let { loginResult ->
+                        val token = loginResult.accessToken
+                        // Successful facebook sign-in
+                        val credential = FacebookAuthProvider.getCredential(token.token)
+                        auth.signInWithCredential(credential).addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                // user is logged in and go to main page
+                                goToMainPage()
+                            }
+                            else
+                                Toast.makeText(this@LoginActivity, "An error has occurred, please try again later.", Toast.LENGTH_SHORT).show()
+                        }.addOnFailureListener {
+                            Log.d(TAG, "userGoogleAuth: ${it.message}")
+                        }
+                    }
+                }
+
+                override fun onCancel() {}
+
+                override fun onError(error: FacebookException) {
+                    Toast.makeText(this@LoginActivity, "An error has occurred, please try again later.", Toast.LENGTH_SHORT).show()
+                }
+
+            })
+        }
+    }
+
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun googleSignIn() {
+        googleButton.setOnClickListener {
+            val intent = googleSignInClient.signInIntent
+            resultLauncher.launch(intent)
+        }
+    }
+
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_CANCELED) {
+            // There are no request codes
+            val data: Intent? = result.data
+            val accountTask = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Successful google sign-in
+                val account = accountTask.getResult(ApiException::class.java)
+                val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
+                auth.signInWithCredential(credential).addOnSuccessListener { authResult ->
+                    // get loggedIn user
+                    val user = auth.currentUser
+                    val uid = auth.currentUser!!.uid
+                    val email = auth.currentUser!!.email
+
+                    // check if user is new
+                    if (authResult.additionalUserInfo!!.isNewUser)
+                        Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show()
+
+                    // user is logged in and go to main page
+                    goToMainPage()
+                }.addOnFailureListener {
+                    Log.d(TAG, "userGoogleAuth: ${it.message}")
+                }
+            }
+            catch (e: Exception) {
+                // Failed google sign-in
+                Log.d(TAG, "resultLauncher: $e")
+            }
+        }
+    }
+
+    fun checkUser() {
         val currentUser = auth.currentUser
+        auth.signOut()
         if(currentUser != null){
             goToMainPage();
         }
@@ -169,38 +267,4 @@ class LoginActivity : AppCompatActivity() {
         }
         return success;
     }
-
-    /*private fun createRequest() {
-        // Configure Google Sign In
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
-    }*/
-
-    /*private fun signIn() {
-        val signInIntent: Intent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }*/
-
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
-            }
-        }
-    }*/
 }

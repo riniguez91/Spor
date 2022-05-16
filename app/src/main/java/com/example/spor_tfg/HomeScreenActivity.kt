@@ -99,8 +99,9 @@ class HomeScreenActivity : AppCompatActivity() {
 
     private fun loadFirestoreData() {
         val playersRef = db.collection("user").document(auth.uid.toString())
+        doc = HashMap()
         playersRef.get().addOnSuccessListener { document ->
-            if (document != null) {
+            if (document.data != null) {
                     // Cast and ignore linter warnings
                     @Suppress("UNCHECKED_CAST")
                     doc = document.data as HashMap<Any, Any>
