@@ -8,21 +8,22 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
-        app:cardBackgroundColor="@color/secondaryRed"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="30dp"
         android:layout_marginStart="70dp"
         android:layout_marginEnd="70dp"
-        app:strokeColor="@color/black"
-        app:strokeWidth="3dp">
+        android:layout_weight="1"
+        app:cardBackgroundColor="@color/primaryDark">
 
         <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
+            android:background="@drawable/card_elevation"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:elevation="15dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,27 +36,28 @@
                     android:id="@+id/plays_card_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/white"
                     android:text="Zonas con ataque en superioridad"
-                    android:fontFamily="@font/nexa_bold"
+                    android:fontFamily="@font/inter_bold"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     />
 
                 <!-- Horizontal divider -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="3dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/primaryDark"/>
+                    android:background="@color/colorAccent"/>
 
                 <TextView
                     android:id="@+id/plays_card_objective"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:fontFamily="@font/nexa_light"
+                    android:fontFamily="@font/poppins_light"
                     android:text="@string/bold_objective"
                     android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     />
 
                 <!-- Media -->
@@ -100,10 +102,10 @@
             <!-- Horizontal divider -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="3dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@color/primaryDark"/>
+                android:background="@color/colorAccent"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

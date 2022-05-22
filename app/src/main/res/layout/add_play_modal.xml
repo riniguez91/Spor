@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/primaryDark"
+    android:elevation="15dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -12,47 +14,64 @@
         android:gravity="center"
         android:text="Play information"
         android:textColor="@color/white"
-        android:background="@color/secondaryRed"
-        android:fontFamily="@font/nexa_light"
+        android:fontFamily="@font/inter_bold"
         android:textSize="40sp"
-        android:padding="30dp"
+        android:padding="25dp"
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorAccent"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/add_play_modal_name_ilayout"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:endIconMode="clear_text"
-        android:layout_height="wrap_content"
-        android:hint="Play name"
-        android:textColorHint="@color/black">
+        android:layout_marginTop="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/colorAccent"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white"
+        android:hint="Play name">
         <com.google.android.material.textfield.TextInputEditText
-            android:gravity="center"
             android:id="@+id/add_play_name_field"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="30dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/nexa_light"
+            android:textSize="22sp"
+            android:textColor="@color/white"
             android:background="@android:color/transparent"
             android:text="Introduce text..."/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/add_play_modal_objective_ilayout"
-        android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
-        app:endIconMode="clear_text"
         android:layout_height="wrap_content"
-        android:hint="Objective"
-        android:textColorHint="@color/black">
+        android:layout_width="match_parent"
+        app:endIconMode="clear_text"
+        android:layout_marginTop="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:layout_marginBottom="34dp"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/colorAccent"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white"
+        android:hint="Objective">
         <com.google.android.material.textfield.TextInputEditText
-            android:gravity="center"
             android:id="@+id/add_play_modal_objective"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="30dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/nexa_light"
+            android:textSize="22sp"
+            android:textColor="@color/white"
             android:background="@android:color/transparent"
             android:text="Introduce text..."/>
     </com.google.android.material.textfield.TextInputLayout>

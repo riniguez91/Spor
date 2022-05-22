@@ -84,8 +84,8 @@ class VideoEditorActivity : AppCompatActivity() {       // NavigationView.OnNavi
     lateinit var chooseVideoLL: LinearLayout
     lateinit var mainRL: RelativeLayout
     lateinit var frameButtons: LinearLayout
-    lateinit var frameConfirmationBttn: Button
-    lateinit var frameCancelBttn: Button
+    lateinit var frameConfirmationBttn: TextView
+    lateinit var frameCancelBttn: TextView
     lateinit var veDrawView: VEDrawView
     var videoLastPos: Int = 0
     lateinit var bmFrame: Bitmap
@@ -272,6 +272,7 @@ class VideoEditorActivity : AppCompatActivity() {       // NavigationView.OnNavi
                     addLoadedTag(it.getCustomMetadata("tag")!!, it.getCustomMetadata("time_int")!!.toInt(), it.name!!)
                 }
             }
+
         }.addOnFailureListener {
             Toast.makeText(this@VideoEditorActivity, "There was an error deleting the tag, please try again later.", Toast.LENGTH_SHORT).show()
         }
@@ -435,6 +436,7 @@ class VideoEditorActivity : AppCompatActivity() {       // NavigationView.OnNavi
     }
 
     private fun showCustomViewDialog(dialogBehavior: DialogBehavior = ModalDialog) {
+        modalView.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
         val dialog = MaterialDialog(this, dialogBehavior).show {
             title(text = "Confirm action")
             message(text = "Are you sure you want to add the following tag")

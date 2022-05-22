@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputLayout
 
@@ -22,6 +23,7 @@ class AddPlayerDialogFragment: DialogFragment() {
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
             val inflatedView: LinearLayout = inflater.inflate(R.layout.add_player_signin, null) as LinearLayout
+            inflatedView.setBackgroundColor(ContextCompat.getColor(requireContext().applicationContext, R.color.primaryDark))
 
             // Set dropdown menu
             val items = listOf("Right footed", "Left footed", "Ambidextrous")

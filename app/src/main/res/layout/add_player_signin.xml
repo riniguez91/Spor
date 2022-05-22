@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/primaryDark"
+    android:elevation="15dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -12,65 +14,88 @@
         android:gravity="center"
         android:text="Add Player"
         android:textColor="@color/white"
-        android:background="@color/secondaryRed"
-        android:fontFamily="@font/nexa_light"
+        android:fontFamily="@font/inter_bold"
         android:textSize="40sp"
-        android:padding="30dp"
+        android:padding="25dp"
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorAccent"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/player_signin_name_ilayout"
+        android:hint="Change name"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:endIconMode="clear_text"
-        android:layout_height="wrap_content"
-        android:hint="Change name"
-        android:textColorHint="@color/black">
+        android:layout_marginTop="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/colorAccent"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white">
         <com.google.android.material.textfield.TextInputEditText
-            android:gravity="center"
             android:id="@+id/player_signin_name_field"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="30dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/nexa_light"
+            android:textSize="25sp"
+            android:textColor="@color/white"
             android:background="@android:color/transparent"
             android:text="Rapahel Varane"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/player_signin_pos_ilayout"
+        android:hint="Change position"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:endIconMode="clear_text"
-        android:textColorHint="@color/black"
-        android:layout_height="wrap_content"
-        android:hint="Change position">
+        android:layout_marginTop="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/colorAccent"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/player_signin_pos_field"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="30dp"
-            android:fontFamily="@font/nexa_light"
-            android:gravity="center"
-            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textColor="@color/white"
             android:background="@android:color/transparent"
             android:text="DEF"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/player_signin_jersey_no_ilayout"
+        android:hint="Change Jersey No."
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:endIconMode="clear_text"
-        android:layout_height="wrap_content"
-    android:textColorHint="@color/black"
-        android:hint="Change Jersey No.">
+        android:layout_marginTop="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/colorAccent"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/player_signin_jersey_no_field"
-            android:fontFamily="@font/nexa_light"
+            android:fontFamily="@font/inter_regular"
             android:gravity="center"
-            android:paddingTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textColor="@color/white"
             android:background="@android:color/transparent"
             android:text="4"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -79,16 +104,23 @@
         android:id="@+id/player_signin_leading_foot_ilayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="@color/white"
         android:layout_height="wrap_content"
+        app:boxBackgroundMode="outline"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="34dp"
+        app:boxStrokeColor="@color/colorAccent"
+        app:hintTextColor="@color/white"
         android:hint="Change Leading Foot">
         <AutoCompleteTextView
             android:gravity="center"
-            android:fontFamily="@font/nexa_light"
+            android:fontFamily="@font/inter_regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
+            android:textSize="20sp"
             android:textColor="@color/black"
             tools:ignore="LabelFor" />
     </com.google.android.material.textfield.TextInputLayout>

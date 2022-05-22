@@ -363,7 +363,9 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
                         val playRef =
                             storage.reference.child("${auth.uid.toString()}/plays/${intent.getStringExtra("session_name")}/animations")
 
+                        println("Deserialized points is:: $points")
                         val jsonString: String = Gson().toJson(points, HashMap::class.java)
+                        println("Serialized points is:: $jsonString")
                         val uploadTask = playRef.putBytes(jsonString.toByteArray())
                         uploadTask.addOnFailureListener {
                             // Handle unsuccessful uploads
@@ -575,6 +577,7 @@ class PaintActivity : AppCompatActivity() {  // NavigationView.OnNavigationItemS
             // Construct dialog
             val dialogBuilder = AlertDialog.Builder(this)
             val playerModalView: View = layoutInflater.inflate(R.layout.player_modal, null)
+            playerModalView.setBackgroundColor(ContextCompat.getColor(this, R.color.primaryDark))
             dialogBuilder.setView(playerModalView)
             val dialog = dialogBuilder.create()
             dialog.show()

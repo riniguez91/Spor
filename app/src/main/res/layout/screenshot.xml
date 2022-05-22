@@ -6,23 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    android:background="@color/secondaryRed"
+    android:background="@drawable/card_elevation"
+    android:elevation="15dp"
     tools:context=".Screenshots">
 
     <TextView
         android:id="@+id/screenshot_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/nexa_bold"
+        android:fontFamily="@font/inter_bold"
         android:text="Play 1"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="30sp"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/primaryDark"/>
+        android:layout_height="3dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorAccent"/>
 
     <ImageView
         android:id="@+id/screenshot_iv"

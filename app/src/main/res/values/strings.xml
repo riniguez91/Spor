@@ -28,7 +28,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="login_image_content_description">Image logo</string>
-    <string name="login_header_text">WELCOME BACK!</string>
+    <string name="login_header_text">Welcome Back!</string>
     <string name="login_subheading_text">Sign In to continue</string>
     <string name="login_forgot_password_text">FORGOT PASSWORD?</string>
     <string name="sign_in_with_google">Continue with Google</string>

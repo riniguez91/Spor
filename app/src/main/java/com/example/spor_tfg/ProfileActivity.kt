@@ -295,7 +295,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         // Buttons
         val playerStatus: ImageButton = cardLayout.findViewById<ImageButton>(R.id.profile_player_card_status)
-        val editPlayerButton: ImageButton = cardLayout.findViewById(R.id.profile_player_card_edit)
+        val editPlayerButton: Button = cardLayout.findViewById(R.id.profile_player_card_edit)
         val cancelCardEdit = cardLayout.findViewById<ImageButton>(R.id.profile_player_card_edit_cancel)
         val confirmCardEdit = cardLayout.findViewById<ImageButton>(R.id.profile_player_card_edit_confirm)
         val deleteCardEdit = cardLayout.findViewById<ImageButton>(R.id.profile_player_card_edit_delete)
@@ -422,7 +422,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     @SuppressLint("InflateParams")
-    private fun editPlayerClickFunc(card: MaterialCardView, editPlayerButton: ImageButton, cancelCardEdit: ImageButton, confirmCardEdit: ImageButton, deleteCardEdit: ImageButton,
+    private fun editPlayerClickFunc(card: MaterialCardView, editPlayerButton: Button, cancelCardEdit: ImageButton, confirmCardEdit: ImageButton, deleteCardEdit: ImageButton,
                                     editNameLayout: TextInputLayout, cardName: TextView, cardPosHelper: TextView, cardPos: TextView, cardPosLayout: TextInputLayout,
                                     cardJerseyNoHelper: TextView, cardJerseyNo: TextView, cardJerseyNoLayout: TextInputLayout, cardLeadingFoot: TextView,
                                     cardLeadingFootLayout: TextInputLayout, team: String, id: Int, addPlayer: ImageButton) {
@@ -525,14 +525,13 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         )
     }
 
-    private fun changePlayerCardEdit(flag: Boolean, card: MaterialCardView, editPlayerButton: ImageButton, cancelCardEdit: ImageButton, confirmCardEdit: ImageButton,
+    private fun changePlayerCardEdit(flag: Boolean, card: MaterialCardView, editPlayerButton: Button, cancelCardEdit: ImageButton, confirmCardEdit: ImageButton,
                                      deleteCardEdit: ImageButton, cardName: TextView, editNameLayout: TextInputLayout, cardPosHelper: TextView, cardPos: TextView,
                                      cardPosLayout: TextInputLayout, cardJerseyNoHelper: TextView, cardJerseyNo: TextView, cardJerseyNoLayout: TextInputLayout,
                                      cardLeadingFoot: TextView, cardLeadingFootLayout: TextInputLayout, addPlayer: ImageButton) {
         // Set edit card elements
         if (!flag) {
             editPlayerFlag = true
-            card.background = ContextCompat.getDrawable(this, R.color.colorAccent)
             // Buttons
             editPlayerButton.visibility = View.GONE
             cancelCardEdit.visibility = View.VISIBLE
@@ -557,7 +556,6 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         // Set card viewing elements
         else {
             editPlayerFlag = false
-            card.background = ContextCompat.getDrawable(this, R.color.secondaryRed)
             // Buttons
             editPlayerButton.visibility = View.VISIBLE
             cancelCardEdit.visibility = View.GONE

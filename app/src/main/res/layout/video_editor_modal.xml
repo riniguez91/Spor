@@ -20,28 +20,25 @@
                 app:drawableTopCompat="@drawable/ic_baseline_cloud_upload_24"
                 android:drawablePadding="10dp"
                 />
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:background="@color/colorAccent" />
+
             <TextView
+                android:id="@+id/video_editor_modal_load"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OR"
+                android:text="Load Video"
                 android:textColor="@color/white"
-                android:textSize="40sp"
-                android:fontFamily="@font/nexa_bold"
-                android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:layout_gravity="center"
-                />
-        <TextView
-            android:id="@+id/video_editor_modal_load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Load Video"
-            android:textColor="@color/white"
-            android:textSize="35sp"
-            android:paddingTop="15dp"
-            android:fontFamily="@font/nexa_light"
-            app:drawableTopCompat="@drawable/ic_baseline_download_24"
-            android:drawablePadding="10dp"/>
+                android:textSize="35sp"
+                android:paddingTop="15dp"
+                android:fontFamily="@font/nexa_light"
+                app:drawableTopCompat="@drawable/ic_baseline_download_24"
+                android:drawablePadding="10dp"/>
 
     </LinearLayout>
 

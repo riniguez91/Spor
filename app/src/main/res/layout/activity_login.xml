@@ -23,53 +23,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80sp"
-        android:fontFamily="@font/nexa_bold"
+        android:fontFamily="@font/poppins_semibold"
         android:text="@string/login_header_text"
         android:textColor="@color/white"
         android:textSize="34sp"
-        android:transitionName="@string/transition_text"/>
+        android:transitionName="@string/transition_text" />
 
     <TextView
         android:id="@+id/login_subheading"
-        android:transitionName="@string/transition_subheading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/nexa_light"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/inter_regular"
         android:text="@string/login_subheading_text"
-        android:textSize="20sp"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textStyle="italic" />
+        android:textSize="20sp"
+        android:transitionName="@string/transition_subheading" />
 
     <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginStart="50sp"
         android:layout_marginTop="100sp"
         android:layout_marginEnd="50sp"
-        android:layout_marginStart="50sp"
-        android:fontFamily="@font/nexa_bold"
+        android:autofillHints=""
+        android:elegantTextHeight="true"
+        android:fontFamily="@font/inter_medium"
         android:hint="@string/prompt_username"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
         android:textAlignment="textStart"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:elegantTextHeight="true"
         android:transitionName="@string/transition_username"
-        app:backgroundTint="@color/colorAccent"
-        android:autofillHints="" />
+        app:backgroundTint="@color/colorAccent" />
 
     <EditText
         android:id="@+id/password"
-        android:transitionName="@string/transition_password"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginStart="50sp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="50sp"
-        android:layout_marginStart="50sp"
+        android:autofillHints=""
         android:elegantTextHeight="true"
+        android:fontFamily="@font/inter_medium"
         android:hint="@string/prompt_password"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
@@ -78,9 +78,9 @@
         android:selectAllOnFocus="true"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
+        android:transitionName="@string/transition_password"
         app:backgroundTint="@color/colorAccent"
-        app:passwordToggleEnabled="true"
-        android:autofillHints="" />
+        app:passwordToggleEnabled="true" />
 
     <Button
         android:id="@+id/login_forgot_password_button"
@@ -95,10 +95,10 @@
         android:id="@+id/login"
         android:layout_width="200dp"
         android:layout_height="51dp"
+        android:layout_marginTop="60sp"
         android:background="@drawable/roundstyle"
         android:enabled="true"
-        android:layout_marginTop="60sp"
-        android:fontFamily="@font/nexa_bold"
+        android:fontFamily="@font/inter_semibold"
         android:text="@string/action_sign_in"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -114,13 +114,7 @@
         android:layout_height="48dp"
         android:background="#00FFFFFF"
         android:text="@string/login_signup_text"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_forgot_password_button"
-        app:layout_constraintVertical_bias="0.968" />
+        android:textSize="11sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -130,6 +124,7 @@
 
         <Button
             android:id="@+id/login_google_button"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:background="@drawable/roundstyle"
@@ -154,10 +149,10 @@
             android:layout_height="48dp"
             android:background="@drawable/roundstyle"
             android:drawableLeft="@drawable/facebook"
+            android:enabled="true"
+            android:fontFamily="@font/inter_medium"
             android:paddingStart="10sp"
             android:paddingEnd="10sp"
-            android:enabled="true"
-            android:fontFamily="@font/nexa_bold"
             android:text="@string/sign_in_with_facebook"
             android:textAllCaps="false"
             android:textColor="@color/white"

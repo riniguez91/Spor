@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:fontFamily="@font/nexa_bold"
+                android:fontFamily="@font/inter_regular"
                 android:text="Welcome, Coach"
                 android:textColor="@color/white"
                 android:textSize="40sp" />

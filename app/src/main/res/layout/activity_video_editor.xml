@@ -96,6 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/black"
+            android:visibility="visible"
             android:orientation="vertical">
 
             <LinearLayout
@@ -118,16 +119,12 @@
                     android:textSize="35sp"
                     app:drawableTopCompat="@drawable/ic_baseline_cloud_upload_24" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/nexa_bold"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="30dp"
-                    android:text="OR"
-                    android:textColor="@color/white"
-                    android:textSize="40sp" />
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:background="@color/colorAccent" />
 
                 <TextView
                     android:id="@+id/video_editor_modal_load"
@@ -199,37 +196,33 @@
                 android:layout_marginTop="135dp"
                 android:visibility="gone"
                 android:orientation="horizontal">
-                <Button
+                <TextView
                     android:id="@+id/video_editor_frame_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/roundstyle"
+                    android:background="@drawable/roundstyle_white_bg"
                     android:enabled="true"
                     android:padding="12dp"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:layout_marginEnd="100dp"
-                    android:fontFamily="@font/nexa_bold"
+                    android:fontFamily="@font/poppins_light"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:text="Cancel"
-                    app:backgroundTint="@color/colorAccent"
-                    style="?android:attr/buttonBarButtonStyle" />
-                <Button
+                    android:text="Cancel" />
+                <TextView
                     android:id="@+id/video_editor_frame_confirmation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/roundstyle"
+                    android:background="@drawable/roundstyle_white_bg"
                     android:enabled="true"
                     android:padding="12dp"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:fontFamily="@font/nexa_bold"
+                    android:fontFamily="@font/poppins_light"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:text="Confirm"
-                    app:backgroundTint="@color/colorAccent"
-                    style="?android:attr/buttonBarButtonStyle" />
+                    android:text="Confirm" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -243,25 +236,37 @@
             android:orientation="horizontal"
             android:baselineAligned="false">
 
-            <ScrollView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:paddingBottom="20dp"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical|top"
-                android:layout_margin="20dp"
-                android:background="@drawable/roundstyle">
-                <LinearLayout
-                    android:id="@+id/loaded_tags_ll"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:layout_gravity="center_vertical|top"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/card_elevation">
+                    <LinearLayout
+                        android:id="@+id/loaded_tags_ll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                    </LinearLayout>
 
-                </LinearLayout>
+                </ScrollView>
 
-            </ScrollView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/colorAccent"/>
+
+            </LinearLayout>
 
             <ScrollView
                 android:layout_width="0dp"
@@ -279,10 +284,11 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Attack (ATK)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
+                        android:textColor="@color/white"
                         android:paddingStart="20dp"
                         android:paddingEnd="25dp"
                         android:layout_marginEnd="15dp"
@@ -293,8 +299,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Defense (DEF)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:padding="5dp"
                         android:paddingStart="20dp"
@@ -307,9 +314,10 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Throw-in (TI)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
+                        android:textColor="@color/white"
                         android:padding="5dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="25dp"
@@ -321,8 +329,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Handball (HB)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:padding="5dp"
                         android:paddingStart="20dp"
@@ -335,7 +344,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Corner (COR)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -349,7 +359,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Goal Kick (GK)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -363,7 +374,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Foul (FOU)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -377,7 +389,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Free Kick (FK)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -391,7 +404,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Penalty (PY)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -405,7 +419,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Offside (OFF)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -419,7 +434,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Goal (GOA)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -433,7 +449,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="D.Goal (DGOA)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -447,7 +464,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Yellow (YCAR)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"
@@ -461,7 +479,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundstyle_white_bg"
                         android:text="Red (RCAR)"
-                        android:fontFamily="@font/nexa_bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_light"
                         android:textSize="22sp"
                         android:gravity="center"
                         android:padding="5dp"

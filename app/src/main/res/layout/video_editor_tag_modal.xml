@@ -8,11 +8,11 @@
     <TextView
         android:id="@+id/tag_modal_text"
         android:layout_width="match_parent"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:layout_height="wrap_content"
-        android:background="@drawable/roundstyle"
+        android:background="@color/black"
         android:text="TE (TE)"
-        android:fontFamily="@font/nexa_light"
+        android:fontFamily="@font/poppins_light"
         android:textSize="24sp"
         android:textAlignment="viewStart"
         android:layout_margin="70dp"
@@ -21,16 +21,20 @@
         android:paddingEnd="25dp"
         android:drawablePadding="7dp"
         android:layout_marginEnd="15dp"/>
+
     <TextView
         android:id="@+id/tag_modal_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:fontFamily="@font/nexa_bold"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="70dp"
+        android:fontFamily="@font/poppins_light"
         android:padding="10dp"
         android:paddingEnd="20sp"
-        android:layout_margin="70dp"
         android:text="- 1:02"
         android:textAlignment="viewEnd"
+        android:textColor="@color/white"
         android:textSize="24sp" />
 </RelativeLayout>

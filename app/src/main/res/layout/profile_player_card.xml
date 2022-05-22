@@ -7,7 +7,7 @@
     android:id="@+id/profile_player_card">
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
-        app:cardBackgroundColor="@color/secondaryRed"
+        app:cardBackgroundColor="@color/primaryDark"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -20,18 +20,20 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="20dp"
+            android:background="@drawable/card_elevation"
+            android:elevation="15dp"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <!-- Media -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="wrap_content"
-                android:layout_height="180dp"
+                android:layout_height="220dp"
+                android:paddingStart="40dp"
+                android:paddingEnd="40dp"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                 android:adjustViewBounds="true"
                 android:maxHeight="180dp"
-                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                android:layout_marginTop="25dp"
                 tools:srcCompat="@tools:sample/avatars"
                 android:id="@+id/player_card_image"
                 android:contentDescription="Image view"
@@ -41,11 +43,13 @@
                 android:id="@+id/profile_player_card_status"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
                 android:contentDescription="TODO"
                 android:minWidth="48dp"
                 android:background="@drawable/available" />
+
+            <!-- Media -->
 
             <LinearLayout
                 android:id="@+id/profile_player_card_ll"
@@ -61,12 +65,12 @@
                     android:id="@+id/profile_player_card_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/nexa_bold"
+                    android:fontFamily="@font/poppins_light"
                     android:gravity="center"
                     android:text="Rapahel Varane"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_player_name_ilayout"
@@ -74,12 +78,20 @@
                     android:layout_width="match_parent"
                     app:endIconMode="clear_text"
                     android:layout_height="wrap_content"
-                    android:hint="Change name">
+                    android:hint="Change name"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxStrokeColor="@color/colorAccent"
+                    android:textColorHint="@color/white"
+                    app:hintTextColor="@color/white">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_player_name_field"
-                        android:fontFamily="@font/nexa_light"
+                        android:fontFamily="@font/inter_regular"
+                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="20sp"
                         android:textColor="@color/white"
                         android:background="@android:color/transparent"
                         android:text="Rapahel Varane"/>
@@ -90,14 +102,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
 
                     <TextView
                         android:id="@+id/profile_player_card_pos_helper"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
                         android:layout_marginRight="3dp"
+                        android:textSize="20sp"
                         android:fontFamily="@font/abeezee"
                         android:text="@string/profile_position_string"
                         android:textColor="@color/white" />
@@ -106,29 +119,35 @@
                         android:id="@+id/profile_player_card_pos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:fontFamily="@font/nexa_bold"
+                        android:fontFamily="@font/inter_regular"
                         android:textColor="@color/white"
+                        android:textSize="20sp"
                         android:text="DEF" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:visibility="gone"
                         android:id="@+id/edit_player_pos_ilayout"
+                        android:hint="Change position"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         app:endIconMode="clear_text"
                         android:layout_height="wrap_content"
-                        android:hint="Change position">
+                        app:boxBackgroundMode="filled"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        app:boxStrokeColor="@color/colorAccent"
+                        android:textColorHint="@color/white"
+                        app:hintTextColor="@color/white">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_player_pos_field"
-                            android:fontFamily="@font/nexa_light"
+                            android:fontFamily="@font/inter_regular"
+                            android:gravity="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textSize="20sp"
                             android:textColor="@color/white"
                             android:background="@android:color/transparent"
-                            android:text="DEF"/>
+                            android:text="DEF" />
                     </com.google.android.material.textfield.TextInputLayout>
-
-
 
                 </LinearLayout>
 
@@ -136,14 +155,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
 
                     <TextView
                         android:id="@+id/profile_player_card_jersey_no_helper"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
                         android:layout_marginRight="3dp"
+                        android:textSize="20sp"
                         android:fontFamily="@font/abeezee"
                         android:text="@string/profile_jersey_no_text"
                         android:textColor="@color/white" />
@@ -152,8 +172,8 @@
                         android:id="@+id/profile_player_card_jersey_no"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:fontFamily="@font/nexa_bold"
+                        android:fontFamily="@font/inter_regular"
+                        android:textSize="20sp"
                         android:textColor="@color/white"
                         android:text="4" />
 
@@ -163,11 +183,19 @@
                         android:layout_width="match_parent"
                         app:endIconMode="clear_text"
                         android:layout_height="wrap_content"
-                        android:hint="Change Jersey No.">
+                        android:hint="Change Jersey No."
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        app:boxBackgroundMode="filled"
+                        app:boxStrokeColor="@color/colorAccent"
+                        app:hintTextColor="@color/white"
+                        android:textColorHint="@color/white">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_player_jersey_no_field"
                             android:layout_width="match_parent"
-                            android:fontFamily="@font/nexa_light"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:fontFamily="@font/inter_regular"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
                             android:background="@android:color/transparent"
@@ -180,8 +208,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:fontFamily="@font/nexa_bold"
+                    android:fontFamily="@font/inter_regular"
                     android:text="leading_foot"
+                    android:textSize="20sp"
                     android:textColor="@color/white" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -190,9 +219,14 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:textColorHint="@color/white"
-                    android:layout_marginTop="8dp"
                     android:layout_height="wrap_content"
-                    android:hint="Change Leading Foot">
+                    app:boxBackgroundMode="outline"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:layout_marginTop="15dp"
+                    app:boxStrokeColor="@color/colorAccent"
+                    android:hint="Change Leading Foot"
+                    app:hintTextColor="@color/white">
                     <AutoCompleteTextView
                         android:fontFamily="@font/nexa_light"
                         android:layout_width="match_parent"
@@ -206,7 +240,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="25dp">
 
                     <ImageButton
                         android:id="@+id/profile_player_card_edit_cancel"
@@ -247,16 +282,15 @@
                         android:minHeight="48dp"
                         android:src="@drawable/ic_baseline_delete_24" />
 
-                    <ImageButton
+                    <Button
                         android:id="@+id/profile_player_card_edit"
-                        android:layout_width="wrap_content"
+                        android:layout_width="150dp"
+                        android:visibility="visible"
                         android:layout_height="wrap_content"
-                        android:background="#00000000"
-                        android:paddingTop="12dp"
-                        android:paddingStart="11dp"
+                        android:text="Edit player"
+                        android:background="@drawable/roundstyle"
+                        app:backgroundTint="@color/colorAccent"
                         android:contentDescription="TODO"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
                         android:src="@drawable/edit" />
 
                     <ImageButton
@@ -264,7 +298,7 @@
                         android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="12dp"
+                        android:layout_marginTop="8dp"
                         android:background="#00000000"
                         android:paddingStart="11dp"
                         android:contentDescription="TODO"
@@ -275,103 +309,14 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorAccent"/>
+
         </LinearLayout>
+
 
     </com.google.android.material.card.MaterialCardView>
-
-    <!-- <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
-        android:layout_marginEnd="60dp">
-
-        <LinearLayout
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:orientation="vertical">
-
-            &lt;!&ndash; Media &ndash;&gt;
-            <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="match_parent"
-                android:layout_height="194dp"
-                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                tools:srcCompat="@tools:sample/avatars"
-                android:scaleType="centerCrop"
-                android:id="@+id/player_card_image"
-                android:contentDescription="Image view"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="16dp">
-
-                &lt;!&ndash; Title, secondary and supporting text &ndash;&gt;
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sergio Ramos"
-                    android:fontFamily="@font/nexa_bold"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginRight="3dp"
-                        android:text="@string/profile_position_string"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="DEF"
-                        android:layout_marginTop="8dp"
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginRight="3dp"
-                        android:text="@string/profile_jersey_no_text"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4"
-                        android:layout_marginTop="8dp"
-                        />
-                </LinearLayout>
-
-
-            </LinearLayout>
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>-->
 </LinearLayout>

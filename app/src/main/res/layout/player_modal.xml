@@ -5,7 +5,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/primaryDark"
     android:gravity="center_horizontal"
+    android:elevation="15dp"
     android:id="@+id/test">
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -23,9 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:fontFamily="@font/nexa_bold"
+        android:fontFamily="@font/inter_bold"
         android:text="TextView"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="34sp" />
 
     <LinearLayout
@@ -45,13 +47,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/nexa_bold"
+                android:fontFamily="@font/inter_semibold"
                 android:gravity="center_horizontal"
                 android:paddingRight="40dp"
                 android:paddingStart="40dp"
                 android:text="Position"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="21sp" />
 
             <TextView
@@ -59,9 +61,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/nexa_bold"
+                android:fontFamily="@font/inter_semibold"
                 android:text="Jersey Number"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="21sp" />
 
         </LinearLayout>
@@ -76,23 +78,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/nexa_light"
+                android:fontFamily="@font/poppins_light"
                 android:text="DEF"
                 android:gravity="center"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/black"
-                android:textColorLink="@color/black"
+                android:textColor="@color/white"
                 android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/popup_jersey_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nexa_light"
+                android:fontFamily="@font/poppins_light"
                 android:text="4"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textColorHighlight="@color/black"
                 android:textColorLink="@color/black"
                 android:textSize="24sp" />
@@ -106,9 +106,9 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/nexa_bold"
+        android:fontFamily="@font/inter_semibold"
         android:text="Jersey Pattern"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="21sp" />
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -119,5 +119,10 @@
         android:layout_height="90dp"
         android:src="@drawable/jersey_1"
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/colorAccent"/>
 
 </LinearLayout>

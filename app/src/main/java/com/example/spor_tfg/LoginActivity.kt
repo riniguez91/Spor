@@ -135,7 +135,8 @@ class LoginActivity : AppCompatActivity() {
                                 goToMainPage()
                             }
                             else
-                                Toast.makeText(this@LoginActivity, "An error has occurred, please try again later.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@LoginActivity,
+                                    "An error has occurred, please try again later.", Toast.LENGTH_SHORT).show()
                         }.addOnFailureListener {
                             Log.d(TAG, "userGoogleAuth: ${it.message}")
                         }
@@ -199,11 +200,13 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun checkUser() {
-        val currentUser = auth.currentUser
+        /*val currentUser = auth.currentUser
         auth.signOut()
+        LoginManager.getInstance().logOut()
         if(currentUser != null){
             goToMainPage();
-        }
+        }*/
+        // UNCOMMENT THIS
     }
 
     fun loginUser() {
