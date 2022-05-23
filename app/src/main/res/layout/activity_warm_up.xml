@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WarmUp">
+
+    <LinearLayout
+        android:id="@+id/screenshots_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/warmup_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/secondaryRed"
+            android:theme="@style/Theme.Spor_TFG.CustomToolbar"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
+        android:paddingBottom="40dp">
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="90dp"
+            android:fontFamily="@font/nexa_bold"
+            android:text="Warm Up"
+            android:textColor="@color/white"
+            android:textSize="50sp"
+            android:gravity="center_horizontal"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@color/colorAccent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exercises"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="40dp"/>
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1">
+
+            <GridLayout
+                android:id="@+id/warmup_exercise_grid_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rowCount="1"
+                android:layout_marginTop="30dp"
+                android:verticalSpacing="100dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/warmup_add_exercise"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_baseline_add_24"
+                    tools:ignore="ContentDescription" />
+
+            </GridLayout>
+
+        </HorizontalScrollView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tasks"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="40dp"/>
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1">
+
+            <GridLayout
+                android:id="@+id/warmup_tasks_grid_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rowCount="1"
+                android:layout_marginTop="30dp"
+                android:verticalSpacing="100dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/warmup_add_task"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_baseline_add_24"
+                    tools:ignore="ContentDescription" />
+
+            </GridLayout>
+
+        </HorizontalScrollView>
+
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -65,7 +65,7 @@
                 android:text="Manage Players"
                 android:textColor="@color/white"
                 android:textSize="35sp"
-                app:drawableTopCompat="@drawable/ic_baseline_supervised_user_circle_24" />
+                app:drawableTopCompat="@drawable/football_player" />
 
             <View
                 android:layout_width="3dp"
@@ -84,7 +84,7 @@
                 android:text="Training Sessions"
                 android:textColor="@color/white"
                 android:textSize="35sp"
-                app:drawableTopCompat="@drawable/ic_baseline_sports_soccer_24" />
+                app:drawableTopCompat="@drawable/football_cartoon" />
         </LinearLayout>
 
         <LinearLayout

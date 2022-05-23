@@ -30,10 +30,10 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:src="@drawable/logo"
+        android:src="@drawable/kisspng_football_player_elblg_team_sport_neymar_vector_5b20859aefc786_2229268715288580109821"
         android:maxHeight="400dp"
         android:contentDescription="@string/todo"
         />

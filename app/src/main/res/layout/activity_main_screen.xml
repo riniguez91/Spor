@@ -54,6 +54,14 @@
                 android:fontFamily="@font/nexa_light"
                 android:layout_gravity="center"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:background="@color/colorAccent" />
+
             <GridLayout
                 android:id="@+id/ms_plays_grid_layout"
                 android:layout_width="wrap_content"
@@ -66,6 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
+                    android:layout_marginBottom="50dp"
                     android:layout_gravity="center"
                     android:id="@+id/mscreen_add_play_button"
                     android:background="@android:color/transparent"

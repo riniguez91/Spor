@@ -3,7 +3,7 @@
     package="com.example.spor_tfg">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -18,9 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Spor_TFG">
         <activity
-            android:name=".Screenshots"
+            android:name=".WarmUp"
             android:exported="true"
             android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
+        <activity
+            android:name=".Screenshots"
+            android:exported="true"
+            android:theme="@style/Theme.Spor_TFG.NoActionBar" />
         <activity
             android:name=".MainScreen"
             android:exported="true"
@@ -49,6 +53,7 @@
             android:theme="@style/Theme.Spor_TFG.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -70,30 +75,32 @@
             android:exported="true"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Spor_TFG.NoActionBar" />
-
-
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="Spor_TFG" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
 
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
     </application>
 
 </manifest>

@@ -100,6 +100,14 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         }
     }
 
+    private fun cardWarmUpClickFunc(cardWarmUpButton: ImageView, currSessionName: String) {
+        cardWarmUpButton.setOnClickListener {
+            val intent = Intent(this, WarmUp::class.java)
+            intent.putExtra("session_name", currSessionName)
+            startActivity(intent)
+        }
+    }
+
     // Go to paint activity
     @Suppress("UNCHECKED_CAST")
     private fun cardPaintClickFunc(cardPaintButton: ImageView, currSessionName: String) {
@@ -228,6 +236,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         val cardLayout = inflater.inflate(R.layout.plays_card, null, false) as LinearLayout
 
         // Buttons
+        val cardWarmUpButton: ImageView = cardLayout.findViewById(R.id.plays_card_warmup_activity)
         val cardPaintButton: ImageView = cardLayout.findViewById(R.id.plays_card_paint_activity)
         val cardVideoButton: ImageView = cardLayout.findViewById(R.id.plays_card_veditor_activity)
         val cardSavedScreenshotsButton: ImageView = cardLayout.findViewById(R.id.plays_card_saved_screenshots)
@@ -236,6 +245,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         val cardDeleteButton: ImageView = cardLayout.findViewById(R.id.plays_card_delete)
 
         // Set on click for each button
+        cardWarmUpClickFunc(cardWarmUpButton, currSessionName)
         cardPaintClickFunc(cardPaintButton, currSessionName)
         cardVideoClickFunc(cardVideoButton, currSessionName)
         cardSavedScreenshotsClickFunc(cardSavedScreenshotsButton, currSessionName)

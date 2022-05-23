@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:layout_marginEnd="40dp"
+    android:layout_marginBottom="40dp"
+    android:background="@drawable/card_elevation"
+    android:elevation="15dp">
+
+    <TextView
+        android:id="@+id/task_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_bold"
+        android:text="GENERAL PREVENTIVE STRENGTH WORK"
+        android:maxWidth="520dp"
+        android:textColor="@color/white"
+        android:textSize="30sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/colorAccent"/>
+
+    <TextView
+        android:id="@+id/task_activation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_lightitalic"
+        android:text="General Activation"
+        android:textColor="@color/white"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/task_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:text="1. Gluteo rubber (rot + and) x6
+                    \n2. Monopodal squat x6
+                    \n3. Isometric adductor x5
+                    \n4. Double rubber acceleration x2"
+        android:textColor="@color/white"
+        android:textSize="24sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/colorAccent"/>
+
+    <TextView
+        android:id="@+id/task_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bolditalic"
+        android:text="Time: 5 mins"
+        android:textColor="@color/white"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/task_rest_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bolditalic"
+        android:text="Rest time: 30 secs"
+        android:textColor="@color/white"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/task_no_sets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bolditalic"
+        android:text="Nº of sets: 4"
+        android:textColor="@color/white"
+        android:textSize="24sp"/>
+
+</LinearLayout>

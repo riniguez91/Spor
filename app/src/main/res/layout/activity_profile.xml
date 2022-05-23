@@ -87,6 +87,14 @@
                 android:textColor="@color/white"
                 android:textSize="26sp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:background="@color/colorAccent" />
+
             <TextView
                 android:id="@+id/profile_selected_players_title"
                 android:visibility="gone"
@@ -125,7 +133,7 @@
                         android:text="No selected players yet..."
                         android:textColor="@color/white"
                         android:textSize="30sp"
-                        android:fontFamily="@font/nexa_light"/>
+                        android:fontFamily="@font/poppins_light"/>
 
                     <!--<ImageButton
                         android:layout_height="170dp"

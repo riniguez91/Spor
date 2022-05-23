@@ -117,7 +117,7 @@
                     android:text="Upload Video"
                     android:textColor="@color/white"
                     android:textSize="35sp"
-                    app:drawableTopCompat="@drawable/ic_baseline_cloud_upload_24" />
+                    app:drawableTopCompat="@drawable/upload_video" />
 
                 <View
                     android:layout_width="3dp"
@@ -130,13 +130,13 @@
                     android:id="@+id/video_editor_modal_load"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
+                    android:drawablePadding="14dp"
                     android:fontFamily="@font/nexa_light"
                     android:paddingTop="15dp"
                     android:text="Load Video"
                     android:textColor="@color/white"
                     android:textSize="35sp"
-                    app:drawableTopCompat="@drawable/ic_baseline_download_24" />
+                    app:drawableTopCompat="@drawable/download_video_big" />
 
             </LinearLayout>
 

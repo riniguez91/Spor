@@ -1,0 +1,130 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/primaryDark"
+    android:elevation="15dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Add Exercise"
+        android:textColor="@color/white"
+        android:fontFamily="@font/inter_bold"
+        android:textSize="40sp"
+        android:padding="25dp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorAccent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/exercise_title_ilayout"
+        android:hint="Set title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:endIconMode="clear_text"
+        android:layout_marginTop="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/colorAccent"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/exercise_title_field"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:background="@android:color/transparent"
+            android:text="Introduce title..."/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/exercise_desc_ilayout"
+        android:hint="Set description"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:endIconMode="clear_text"
+        android:layout_marginTop="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/colorAccent"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/exercise_desc_field"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:background="@android:color/transparent"
+            android:text="Introduce description..."/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/exercise_time_ilayout"
+        android:hint="Set time"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:endIconMode="clear_text"
+        android:layout_marginTop="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/colorAccent"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/exercise_time_field"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:background="@android:color/transparent"
+            android:text="5 minutes"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/exercise_type_ilayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:textColorHint="@color/white"
+        android:layout_height="wrap_content"
+        app:boxBackgroundMode="outline"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/primaryDark"
+        android:layout_marginBottom="34dp"
+        app:boxStrokeColor="@color/colorAccent"
+        app:hintTextColor="@color/white"
+        android:hint="Select type">
+        <AutoCompleteTextView
+            android:gravity="center"
+            android:textColorHighlight="@color/white"
+            android:fontFamily="@font/inter_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:textColorHint="@color/white"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            tools:ignore="LabelFor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

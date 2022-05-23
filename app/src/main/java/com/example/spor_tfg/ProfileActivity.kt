@@ -207,7 +207,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             // Create title textview + horizontal scroll view + grid layout
             val title: TextView = TextView(this)
             val titleParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            titleParams.setMargins(30,45,0,0)
+            titleParams.setMargins(60,0,0,0)
             title.layoutParams = titleParams
             title.typeface = ResourcesCompat.getFont(this, R.font.nexa_light)
             title.text = idx
@@ -216,7 +216,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
             val horizontalScrollView: HorizontalScrollView = HorizontalScrollView(this)
             val hSVLayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            hSVLayoutParams.setMargins(30,20,30,0)
+            hSVLayoutParams.setMargins(30,20,30,65)
             horizontalScrollView.layoutParams = hSVLayoutParams
 
             val gridLayout: GridLayout = GridLayout(this)
@@ -247,7 +247,10 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
             // Add "add player" icon
             val addPlayerButton: ImageButton = ImageButton(this)
-            val addPlayerLParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val addPlayerLParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                marginStart = 10
+                marginEnd = 40
+            }
             addPlayerButton.layoutParams = addPlayerLParams
             addPlayerButton.setBackgroundColor(Color.TRANSPARENT)
             addPlayerButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_add_24))

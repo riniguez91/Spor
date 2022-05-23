@@ -93,13 +93,15 @@
     <string name="profile_jersey_no_text">Jersey No:</string>
     <string name="menu_video_editor">Video Editor</string>
     <string name="bold_objective"><b>Objetivo</b>: %1$s</string>
+    <string name="time">Time: %1$s</string>
+    <string name="restTime">Rest time: %1$s</string>
+    <string name="noSets">No. of sets: %1$s</string>
 
     <!-- Facebook login -->
 
     <string name="facebook_app_id">1545393912582801</string>
     <string name="fb_login_protocol_scheme">fb1545393912582801</string>
     <string name="facebook_client_token">4805312ef2eb1daf74cf438073e7c676</string>
-
 
 
 </resources>
