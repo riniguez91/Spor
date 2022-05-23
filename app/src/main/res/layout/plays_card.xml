@@ -32,15 +32,30 @@
                 android:padding="16dp">
 
                 <!-- Title, secondary and supporting text -->
-                <TextView
-                    android:id="@+id/plays_card_name"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="Zonas con ataque en superioridad"
-                    android:fontFamily="@font/inter_bold"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/plays_card_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Zones with attack superiority"
+                        android:fontFamily="@font/inter_bold"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        />
+
+                    <TextView
+                        android:id="@+id/plays_card_timestamp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_italic"
+                        android:gravity="end"
+                        android:textSize="18sp"
+                        android:text="28/02/2022 18:46"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
 
                 <!-- Horizontal divider -->
                 <View

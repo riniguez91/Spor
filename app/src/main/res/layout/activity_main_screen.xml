@@ -54,6 +54,26 @@
                 android:fontFamily="@font/nexa_light"
                 android:layout_gravity="center"/>
 
+            <!--<ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/calendar"/>-->
+            <TextView
+                android:id="@+id/ms_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click to filter by date: "
+                android:gravity="center"
+                android:layout_marginTop="25dp"
+                android:textSize="24sp"
+                android:drawablePadding="10dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/poppins_light"
+                android:drawableRight="@drawable/calendar"
+                android:layout_gravity="center"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"

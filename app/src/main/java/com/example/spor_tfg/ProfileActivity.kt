@@ -37,10 +37,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.ktx.storageMetadata
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
 import java.util.*
-import kotlin.collections.HashMap
+import java.util.concurrent.TimeUnit
 
 
 class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -399,7 +400,6 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
             // Get session info hashmap
             val playInfoHM: HashMap<String, String> = intent.getSerializableExtra("playInfoHM") as HashMap<String, String>
-
             val ref: UploadTask = uploadHashMapToFirestore(playInfoHM as HashMap<Any, Any>, "${auth.uid.toString()}/plays/${sessionName}/${sessionName}")
             ref.addOnSuccessListener {
                 Toast.makeText(this, "Session created successfully!", Toast.LENGTH_SHORT).show()

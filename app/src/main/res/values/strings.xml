@@ -92,7 +92,7 @@
     <string name="profile_position_string">Position:</string>
     <string name="profile_jersey_no_text">Jersey No:</string>
     <string name="menu_video_editor">Video Editor</string>
-    <string name="bold_objective"><b>Objetivo</b>: %1$s</string>
+    <string name="bold_objective"><b>Objective</b>: %1$s</string>
     <string name="time">Time: %1$s</string>
     <string name="restTime">Rest time: %1$s</string>
     <string name="noSets">No. of sets: %1$s</string>

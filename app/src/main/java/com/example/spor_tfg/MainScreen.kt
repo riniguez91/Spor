@@ -4,23 +4,33 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.core.view.children
+import androidx.core.view.forEach
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.datetime.datePicker
 import com.example.spor_tfg.databinding.ActivityMainScreenBinding
+import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,6 +42,9 @@ import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import java.io.ByteArrayInputStream
 import java.io.ObjectInputStream
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -54,9 +67,11 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
     // Plays grid layout
     lateinit var playsGL: GridLayout
     lateinit var addPlayButton: ImageButton
+    lateinit var calendar: TextView
 
     lateinit var doc: HashMap<Any, Any>
     var sessionName: String = ""
+    var filteredTimeInMillis: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +87,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         // Hooks
         playsGL = findViewById(R.id.ms_plays_grid_layout)
         addPlayButton = findViewById(R.id.mscreen_add_play_button)
+        calendar = findViewById(R.id.ms_calendar)
 
         // Get team info
         myApp = this.application as MyApp
@@ -81,7 +97,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         sessionName = intent.getStringExtra("session_name").toString()
 
         // Load plays
-        loadPlays()
+        loadSessions()
 
         // Set add play button click func
         addPlayFunc()
@@ -91,6 +107,31 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
 
         // Preselect
         preselectToolbar()
+
+        // Set calendar on click func
+        calendarOnClickFunc()
+    }
+
+    private fun calendarOnClickFunc() {
+        calendar.setOnClickListener {
+            MaterialDialog(this).show {
+                datePicker { dialog, date ->
+                    // Use date (Calendar)
+                    filteredTimeInMillis = date.timeInMillis
+                    playsGL.children.forEach { ll ->
+                        if (ll is LinearLayout) {
+                            ll.children.forEach {
+                                val cardTime: Long = convertDateToLong(it.findViewById<TextView>(R.id.plays_card_timestamp).text.toString())
+                                if (filteredTimeInMillis > cardTime)
+                                    it.visibility = View.GONE
+                                else
+                                    it.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun addPlayFunc() {
@@ -230,7 +271,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
     }
 
     @SuppressLint("InflateParams")
-    private fun createPlayCard(name: String, objective: String, currSessionName: String, thumbnailURL: String = "") {
+    private fun createPlayCard(name: String, objective: String, currSessionName: String, time: Long, thumbnailURL: String = "") {
         // Load variables
         val inflater = LayoutInflater.from(this)
         val cardLayout = inflater.inflate(R.layout.plays_card, null, false) as LinearLayout
@@ -277,14 +318,29 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
 
         // Add card to scroll view
         cardLayout.findViewById<TextView>(R.id.plays_card_name).text = name
+
+        // Add card timestamp
+        cardLayout.findViewById<TextView>(R.id.plays_card_timestamp).text = convertLongToTime(time)
+
         val cardObjective: TextView =  cardLayout.findViewById<TextView>(R.id.plays_card_objective)
         cardObjective.text = getString(R.string.bold_objective, objective)
         playsGL.addView(cardLayout, playsGL.indexOfChild(playsGL.getChildAt(playsGL.childCount - 1)))
         cardImage.visibility = View.VISIBLE
     }
 
+    fun convertLongToTime(time: Long): String {
+        val date = Date(time)
+        val format = SimpleDateFormat("dd/MM/yyyy HH:mm")
+        return format.format(date)
+    }
+
+    fun convertDateToLong(date: String): Long {
+        val df = SimpleDateFormat("dd/MM/yyyy HH:mm")
+        return df.parse(date)!!.time
+    }
+
     @Suppress("UNCHECKED_CAST")
-    private fun loadPlays() {
+    private fun loadSessions() {
         // Check if there are any saved plays
         val playsRef = storage.reference.child("${auth.uid.toString()}/plays")
         playsRef.listAll().addOnSuccessListener { listResult ->
@@ -302,8 +358,12 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
 
                     // Check if this session has any thumbnails
                     prefix.listAll().addOnSuccessListener { childListResult ->
-                        if (childListResult.prefixes.size > 0) createPlayCard(cardData["name"].toString(), cardData["objective"].toString(), folderStoRef.name, screenshotsRef)
-                        else createPlayCard(cardData["name"].toString(), cardData["objective"].toString(), folderStoRef.name)
+                        // Get file creation
+                        folderStoRef.metadata.addOnSuccessListener { metadata ->
+                            val time: Long = metadata.creationTimeMillis
+                            if (childListResult.prefixes.size > 0) createPlayCard(cardData["name"].toString(), cardData["objective"].toString(), folderStoRef.name, time, screenshotsRef)
+                            else createPlayCard(cardData["name"].toString(), cardData["objective"].toString(), folderStoRef.name, time)
+                        }
                     }
 
                 }
@@ -330,7 +390,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         playInfoHM["name"] = name
         playInfoHM["objective"] = objective
 
-        createPlayCard(name, objective, "")
+        createPlayCard(name, objective, "", Calendar.getInstance().timeInMillis)
 
         val intent = Intent(this, ProfileActivity::class.java)
         intent.putExtra("addSessionFlag", true)
