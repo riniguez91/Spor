@@ -254,7 +254,7 @@
                         android:layout_weight="1"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
-                        android:src="@drawable/ic_baseline_cancel_24" />
+                        android:src="@drawable/cancel" />
 
                     <ImageButton
                         android:id="@+id/profile_player_card_edit_confirm"
@@ -267,7 +267,7 @@
                         android:contentDescription="TODO"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
-                        android:src="@drawable/ic_baseline_check_circle_24" />
+                        android:src="@drawable/checked" />
 
                     <ImageButton
                         android:id="@+id/profile_player_card_edit_delete"
@@ -280,7 +280,7 @@
                         android:contentDescription="TODO"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
-                        android:src="@drawable/ic_baseline_delete_24" />
+                        android:src="@drawable/delete" />
 
                     <Button
                         android:id="@+id/profile_player_card_edit"
@@ -304,7 +304,7 @@
                         android:contentDescription="TODO"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
-                        android:src="@drawable/ic_baseline_add_circle_outline_24" />
+                        android:src="@drawable/plus" />
 
                 </LinearLayout>
 

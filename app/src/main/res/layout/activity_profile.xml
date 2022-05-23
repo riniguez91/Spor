@@ -188,8 +188,12 @@
         android:id="@+id/profile_navigation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:backgroundTint="@color/primaryDark"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        app:itemBackground="@android:color/transparent"
         app:menu="@menu/home_navigation_drawer"
         app:headerLayout="@layout/nav_header">
     </com.google.android.material.navigation.NavigationView>

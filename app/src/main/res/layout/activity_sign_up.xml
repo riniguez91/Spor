@@ -22,21 +22,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.19"
+        app:layout_constraintVertical_bias="0.764"
         app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/register_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="228dp"
         android:fontFamily="@font/nexa_bold"
         android:text="@string/register_header_text"
         android:textColor="@color/white"
         android:textSize="34sp"
         android:transitionName="@string/transition_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.001"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -174,7 +174,7 @@
         android:layout_width="267dp"
         android:layout_height="39dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -213,7 +213,7 @@
         android:layout_width="200dp"
         android:layout_height="51dp"
         android:layout_gravity="start"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="52dp"
         android:background="@drawable/roundstyle"
         android:enabled="true"
         android:fontFamily="@font/nexa_bold"
@@ -224,7 +224,6 @@
         app:backgroundTint="@color/colorAccent"
         app:cornerRadius="@dimen/fab_margin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:rippleColor="@color/colorAccent" />
@@ -233,11 +232,13 @@
         android:id="@+id/register_go_to_login"
         android:layout_width="270dp"
         android:layout_height="52dp"
+        android:layout_marginTop="4dp"
         android:background="#00FFFFFF"
         android:text="@string/register_go_to_login_text"
         android:textSize="11sp"
         android:transitionName="@string/transition_signup"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/register_signup_button" />
 

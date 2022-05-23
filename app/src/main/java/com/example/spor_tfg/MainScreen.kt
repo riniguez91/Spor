@@ -4,33 +4,25 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.View.GONE
-import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.core.view.forEach
-import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.datetime.datePicker
 import com.example.spor_tfg.databinding.ActivityMainScreenBinding
-import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -72,6 +64,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
     lateinit var doc: HashMap<Any, Any>
     var sessionName: String = ""
     var filteredTimeInMillis: Long = 0
+    var editSessionFlag: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -232,9 +225,22 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
     }
 
     // Edit card
-    private fun cardEditClickFunc(cardEditButton: ImageView) {
+    private fun cardEditClickFunc(cardEditButton: ImageView, cardLayout: LinearLayout) {
         cardEditButton.setOnClickListener {
-            // TODO("Add functionality to edit play title objective and play")
+            if (editSessionFlag) {
+                cardLayout.findViewById<TextView>(R.id.plays_card_name).visibility = View.VISIBLE
+                cardLayout.findViewById<TextView>(R.id.plays_card_objective).visibility = View.VISIBLE
+                cardLayout.findViewById<TextInputLayout>(R.id.plays_card_edit_name_ilayout).visibility = View.GONE
+                cardLayout.findViewById<TextInputLayout>(R.id.plays_card_edit_objective_ilayout).visibility = View.GONE
+                editSessionFlag = false
+            }
+            else {
+                cardLayout.findViewById<TextView>(R.id.plays_card_name).visibility = View.GONE
+                cardLayout.findViewById<TextView>(R.id.plays_card_objective).visibility = View.GONE
+                cardLayout.findViewById<TextInputLayout>(R.id.plays_card_edit_name_ilayout).visibility = View.VISIBLE
+                cardLayout.findViewById<TextInputLayout>(R.id.plays_card_edit_objective_ilayout).visibility = View.VISIBLE
+                editSessionFlag = true
+            }
         }
     }
 
@@ -291,7 +297,7 @@ class MainScreen : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         cardVideoClickFunc(cardVideoButton, currSessionName)
         cardSavedScreenshotsClickFunc(cardSavedScreenshotsButton, currSessionName)
         cardSavedAnimClickFunc(cardSavedAnimButton, currSessionName)
-        cardEditClickFunc(cardEditButton)
+        cardEditClickFunc(cardEditButton, cardLayout)
         cardDeleteClickFunc(cardDeleteButton, currSessionName)
 
         // Get card thumbnail
