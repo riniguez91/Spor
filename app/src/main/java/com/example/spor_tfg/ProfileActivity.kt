@@ -332,9 +332,11 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
             "sick" -> {
                 playerStatus.setBackgroundResource(R.drawable.sick)
+                if (addSessionFlag) addPlayer.visibility = View.GONE
             }
             else -> {
                 playerStatus.setBackgroundResource(R.drawable.injured)
+                if (addSessionFlag) addPlayer.visibility = View.GONE
             }
         }
 
