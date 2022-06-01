@@ -43,10 +43,12 @@
             android:theme="@style/Theme.Spor_TFG.NoActionBar" />
         <activity
             android:name=".ForgotPasswordActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
         <activity
             android:name=".VerifyPhoneNo"
-            android:exported="false" />
+            android:exported="true"
+            android:theme="@style/Theme.Spor_TFG.NoActionBar"/>
         <activity
             android:name=".SplashActivity"
             android:exported="true"

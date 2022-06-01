@@ -20,17 +20,16 @@
         android:transitionName="@string/transition_logo"
         app:layout_constraintBottom_toTopOf="@+id/phone_heading"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.629"
+        app:layout_constraintVertical_bias="0.363"
         app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/phone_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="208dp"
+        android:layout_marginTop="384dp"
         android:fontFamily="@font/inter_bold"
         android:text="@string/phone_heading_text"
         android:textColor="@color/white"

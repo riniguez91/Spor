@@ -14,15 +14,16 @@
 
     <ImageView
         android:id="@+id/login_image"
-        android:layout_width="81dp"
-        android:layout_height="74dp"
+        android:layout_width="128dp"
+        android:layout_height="104dp"
         android:contentDescription="@string/login_image_content_description_text"
         android:transitionName="@string/transition_logo"
         app:layout_constraintBottom_toTopOf="@+id/register_heading"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.02"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.764"
+        app:layout_constraintVertical_bias="0.757"
         app:srcCompat="@drawable/logo" />
 
     <TextView
