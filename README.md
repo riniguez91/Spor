@@ -8,6 +8,8 @@ The development of a machine learning model, within the artificial vision area, 
 
 The full report containing extensive detail can be found in the following link which I highly recommend looking at: https://github.com/riniguez91/Spor/blob/main/Memoria%20Spor.docx
 
+Note: The written report is written in Spanish.
+
 # App screenshots
 
 * Login
